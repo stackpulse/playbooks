@@ -9,7 +9,7 @@
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/redis/get-big-keys/playbook.yaml)
 
 This playbook queries a Redis host and retrieves the current big keys.
-It then send that output to Slack recipients of you choice as a snippet.
+It then sends that output to Slack recipients of your choice as a snippet.
 
 ## Your benefits
 

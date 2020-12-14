@@ -129,7 +129,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
     <td>
       <a href="https://github.com/stackpulse/playbooks/tree/master/redis/get-big-keys"><b>Redis Get Big Keys</b></a><br><br>
       This playbook queries a Redis host and retrieves the current big keys.
-      It then send that output to Slack recipients of you choice as a snippet.<br><br>
+      It then sends that output to Slack recipients of your choice as a snippet.<br><br>
     <div style="padding-top:1px">
         <img src="https://img.shields.io/badge/type-triage-green" alt="type">
         <img src="https://img.shields.io/static/v1?label=service&message=Redis&style=flat&logo=Redis&color=A41E11" alt="service">
