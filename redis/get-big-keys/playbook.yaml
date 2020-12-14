@@ -40,4 +40,4 @@ steps:
     RECIPIENTS: '{{ .params.slackRecipient }}'
     TITLE: redis-latest-big-keys
   envFrom:
-    integrationRef: '{{ .params.SlackIntegrationName }}'
+    integrationRef: '{{ .params.slackIntegrationName }}'
