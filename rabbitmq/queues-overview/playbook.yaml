@@ -1,0 +1,120 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: rabbitmq-queues-overview
+parameters:
+- name: "runnerName"
+  type: var
+  description: "SPD runner name to run the RabbitMQ commands onto"
+- name: "slackRecipient"
+  type: var
+  description: "Slack recipient to send the output to (can be channel, name, or multiple recipients)"
+- name: "host"
+  type: var
+  description: "RabbitMQ host (without port)"
+- name: "port"
+  type: var
+  description: "RabbitMQ port"
+- name: "scehma"
+  type: var
+  description: "RabbitMQ connection schema (http\\s)"
+- name: "user"
+  type: var
+  description: "RabbitMQ user"
+- name: "password"
+  type: secret
+  description: "RabbitMQ password secret"
+- name: "slackIntegrationName"
+  type: integration
+  description: "Slack integration"
+  options:
+    integration_type: slack
+steps:
+# Getting the top consumptions queues
+- name: us-docker.pkg.dev/stackpulse/public/rabbitmq/queues/top
+  id: rabbitmq_analyze_queues
+  env:
+    HOST: '{{ .params.host }}'
+    PASSWORD: '{{ secret .params.password }}'
+    PORT: '{{ .params.port }}'
+    SCHEMA: '{{ .params.scehma }}'
+    USERNAME: '{{ .params.user }}'
+  runner: '{{ .params.runnerName }}'
+# Running on each key the quques are calssified by (just if we have any queue in the RabbitMQ instance)
+- foreach:
+    in: rabbitmq_analyze_queues.max_queues
+    key: key
+    value: value
+    when: "{{ gt (len .rabbitmq_analyze_queues.full_details_queues) 0 }}"
+    steps:
+    # Sending a table-like data of the current key classified queues to slack
+    - name: us-docker.pkg.dev/stackpulse/public/parsers/tabulate
+      id: tabulate_max_queues
+      env:
+        HEADERS: 'keys'
+        INPUT: '{{ toJson .value.max_queues }}'
+    - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+      id: send_top_queues
+      env:
+        SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+        INITIAL_COMMENT: "Disaplyaing RabbitMQ {{ .value.description }} - by key `{{ .key }}`. For queues' full details, see referenced execution."
+        CONTENT: '{{ .tabulate_output }}'
+        TITLE: 'top-queues-key-{{ .key }}'
+        RECIPIENTS: '{{ .params.slackRecipient }}'
+      envFrom:
+        integrationRef: '{{ .params.slackIntegrationName }}'
+# Getting an overview over the RabbitMQ instance
+- name: us-docker.pkg.dev/stackpulse/public/rabbitmq/overview
+  id: rabbitmq_overview
+  env:
+    HOST: '{{ .params.host }}'
+    PASSWORD: '{{ secret .params.password }}'
+    PORT: '{{ .params.port }}'
+    SCHEMA: '{{ .params.scehma }}'
+    USERNAME: '{{ .params.user }}'
+  runner: '{{ .params.runnerName }}'
+# Sending a formatted message of the RabbitMQ overview to slack
+- name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
+  id: send_overview
+  env:
+    SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+    RECIPIENTS: '{{ .params.slackRecipient }}'
+    MESSAGE_TEXT: |
+      Overview of RabbitMQ cluster at `{{ .rabbitmq_overview.cluster_name }}`:
+      ------------------------------------------------------------------------
+      *_Queues_*:
+      ========
+      _Total queues_: *{{ .rabbitmq_overview.object_totals.queues }}*
+      _Total messages_: *{{ .rabbitmq_overview.queue_totals.messages }}*
+      _Total ready messages_: *{{ .rabbitmq_overview.queue_totals.messages_ready }}*
+      _Total unacknowledged messages_: *{{ .rabbitmq_overview.queue_totals.messages_unacknowledged }}*
+
+      *_Churn Rates_*:
+      =============
+      _Channels created_: *{{ .rabbitmq_overview.churn_rates.channel_created }}*
+      _Channels closed_: *{{ .rabbitmq_overview.churn_rates.channel_closed }}*
+
+      _Connections created_: *{{ .rabbitmq_overview.churn_rates.connection_created }}*
+      _Connections closed_: *{{ .rabbitmq_overview.churn_rates.connection_closed }}*
+
+      _Queues created_: *{{ .rabbitmq_overview.churn_rates.queue_created }}*
+      _Queues declared_: *{{ .rabbitmq_overview.churn_rates.queue_declared }}*
+      _Queues deleted_: *{{ .rabbitmq_overview.churn_rates.queue_deleted }}*
+
+      *_Message stats_*:
+      ===============
+      _Confirm_: *{{ .rabbitmq_overview.message_stats.confirm }}*
+      _Disk_ reads: *{{ .rabbitmq_overview.message_stats.disk_reads }}*
+      _Disk_ writes: *{{ .rabbitmq_overview.message_stats.disk_writes }}*
+      _Publish_: *{{ .rabbitmq_overview.message_stats.publish }}*
+      _Drop_ unroutable: *{{ .rabbitmq_overview.message_stats.drop_unroutable }}*
+      _Return_ unroutable: *{{ .rabbitmq_overview.message_stats.return_unroutable }}*
+
+      *_Totals_*:
+      ========
+      _Channels_: *{{ .rabbitmq_overview.object_totals.channels }}*
+      _Connections_: *{{ .rabbitmq_overview.object_totals.connections }}*
+      _Consumers_: *{{ .rabbitmq_overview.object_totals.consumers }}*
+      _Exchanges_: *{{ .rabbitmq_overview.object_totals.exchanges }}*
+  envFrom:
+    integrationRef: '{{ .params.slackIntegrationName }}'

@@ -1,0 +1,157 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: elastic-get-stats
+parameters:
+- name: "slackRecipient"
+  type: var
+  description: "Slack recipient to send the output to. Can be a channel (with #), user email, or multiple recipients)"
+- name: "host"
+  type: var
+  description: "Elastic host (without port)"
+- name: "port"
+  type: var
+  description: "Elastic port"
+- name: "unsafeSSL"
+  type: var
+  description: "Whether to allow connection to any self signed TLS endpoints, if `false` then must provide certContent and certKetContent parameters"
+- name: "user"
+  type: var
+  description: "Elastic user"
+- name: "password"
+  type: secret
+  description: "Elastic password"
+- name: "slackIntegrationName"
+  type: integration
+  description: "Slack integration"
+  options:
+    integration_type: slack
+steps:
+# Getting basic info from the elastic cluster
+- name: us-docker.pkg.dev/stackpulse/public/elastic/info
+  id: elastic_get_basic_info
+  env:
+    HOST: '{{ .params.host }}'
+    PASSWORD: '{{ secret .params.password }}'
+    PORT: '{{ .params.port }}'
+    UNSAFE_SSL: '{{ .params.unsafeSSL }}'
+    USERNAME: '{{ .params.user }}'
+# Sending basic info to slack
+- name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+  id: elastic_send_basic_info
+  env:
+    SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+    RECIPIENTS: '{{ .params.slackRecipient }}'
+    INITIAL_COMMENT: Basic info of Elasticsearch cluster `{{ .elastic_get_basic_info.cluster_name }}`
+    TITLE: 'basic_info_{{ .elastic_get_basic_info.cluster_name }}'
+    CONTENT: '{{ toPrettyJson .elastic_get_basic_info }}'
+    FILE_TYPE: json
+  envFrom:
+    integrationRef: '{{ .params.slackIntegrationName }}'
+# Getting cluster help from the elastic cluster
+- name: us-docker.pkg.dev/stackpulse/public/elastic/cluster-health
+  id: elastic_get_cluster_health
+  env:
+    HOST: '{{ .params.host }}'
+    PASSWORD: '{{ secret .params.password }}'
+    PORT: '{{ .params.port }}'
+    UNSAFE_SSL: '{{ .params.unsafeSSL }}'
+    USERNAME: '{{ .params.user }}'
+# Sending cluster health to slack
+- name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+  id: elastic_send_cluster_health
+  env:
+    SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+    RECIPIENTS: '{{ .params.slackRecipient }}'
+    INITIAL_COMMENT: Cluster health of Elasticsearch cluster `{{ .elastic_get_cluster_health.cluster_name }}`
+    TITLE: 'cluster_health_{{ .elastic_get_cluster_health.cluster_name }}'
+    CONTENT: '{{ toPrettyJson .elastic_get_cluster_health }}'
+    FILE_TYPE: json
+  envFrom:
+    integrationRef: '{{ .params.slackIntegrationName }}'
+# Getting cluster help from the elastic cluster
+- name: us-docker.pkg.dev/stackpulse/public/elastic/cluster-pending-tasks
+  id: elastic_get_pending_tasks
+  env:
+    HOST: '{{ .params.host }}'
+    PASSWORD: '{{ secret .params.password }}'
+    PORT: '{{ .params.port }}'
+    UNSAFE_SSL: '{{ .params.unsafeSSL }}'
+    USERNAME: '{{ .params.user }}'
+# Sending pending tasks to slack
+- name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+  id: elastic_send_pending_tasks
+  env:
+    SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+    RECIPIENTS: '{{ .params.slackRecipient }}'
+    INITIAL_COMMENT: Pending tasks of Elasticsearch cluster
+    TITLE: 'pending_tasks'
+    CONTENT: '{{ toPrettyJson .elastic_get_pending_tasks }}'
+    FILE_TYPE: json
+  envFrom:
+    integrationRef: '{{ .params.slackIntegrationName }}'
+# Getting cluster stats from the elastic cluster
+- name: us-docker.pkg.dev/stackpulse/public/elastic/cluster-stats
+  id: elastic_get_cluster_stats
+  env:
+    HOST: '{{ .params.host }}'
+    PASSWORD: '{{ secret .params.password }}'
+    PORT: '{{ .params.port }}'
+    UNSAFE_SSL: '{{ .params.unsafeSSL }}'
+    USERNAME: '{{ .params.user }}'
+
+
+# Sending cluster stats to slack
+- name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+  id: elastic_send_cluster_stats
+  env:
+    SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+    RECIPIENTS: '{{ .params.slackRecipient }}'
+    INITIAL_COMMENT: Cluster stats of Elasticsearch cluster `{{ .elastic_get_cluster_stats.cluster_name }}`
+    TITLE: 'cluster_stats_{{ .elastic_get_cluster_stats.cluster_name }}'
+    CONTENT: '{{ toPrettyJson .elastic_get_cluster_stats }}'
+    FILE_TYPE: json
+  envFrom:
+    integrationRef: '{{ .params.slackIntegrationName }}'
+# Getting node usage from the elastic cluster
+- name: us-docker.pkg.dev/stackpulse/public/elastic/nodes-usage
+  id: elastic_get_node_usage
+  env:
+    HOST: '{{ .params.host }}'
+    PASSWORD: '{{ secret .params.password }}'
+    PORT: '{{ .params.port }}'
+    UNSAFE_SSL: '{{ .params.unsafeSSL }}'
+    USERNAME: '{{ .params.user }}'
+# Sending node usage to slack
+- name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+  id: elastic_send_nodes_usage
+  env:
+    SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+    RECIPIENTS: '{{ .params.slackRecipient }}'
+    INITIAL_COMMENT: Node usage of Elasticsearch cluster `{{ .elastic_get_node_usage.cluster_name }}`
+    TITLE: 'node_usage_{{ .elastic_get_node_usage.cluster_name }}'
+    CONTENT: '{{ toPrettyJson .elastic_get_node_usage }}'
+    FILE_TYPE: json
+  envFrom:
+    integrationRef: '{{ .params.slackIntegrationName }}'
+# Getting node stats from the elastic cluster
+- name: us-docker.pkg.dev/stackpulse/public/elastic/nodes-stats
+  id: elastic_get_node_stats
+  env:
+    HOST: '{{ .params.host }}'
+    PASSWORD: '{{ secret .params.password }}'
+    PORT: '{{ .params.port }}'
+    UNSAFE_SSL: '{{ .params.unsafeSSL }}'
+    USERNAME: '{{ .params.user }}'
+# Sending node stats to slack
+- name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+  id: elastic_send_nodes_stats
+  env:
+    SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+    RECIPIENTS: '{{ .params.slackRecipient }}'
+    INITIAL_COMMENT: Node stats of Elasticsearch cluster `{{ .elastic_get_node_stats.cluster_name }}`
+    TITLE: 'node_stats_{{ .elastic_get_node_stats.cluster_name }}'
+    CONTENT: '{{ toPrettyJson .elastic_get_node_stats }}'
+    FILE_TYPE: json
+  envFrom:
+    integrationRef: '{{ .params.slackIntegrationName }}'

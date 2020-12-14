@@ -1,0 +1,31 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: archive-incident-war-room
+parameters:
+  - name: "slackIntegrationName"
+    type: integration
+    description: "Slack integration."
+    options:
+      integration_type: slack
+steps:
+- when: '{{ not (empty .event.SlackWarRoomChannelName) }}'
+  steps:
+  # interactively ask the commander whether to archive the war room
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
+    id: slack_ask_on_caller_paging
+    env:
+      DEFAULT_RESPONSE: Yes
+      QUESTION: "Do you want to archive {{ .event.SlackWarRoomChannelName }} channel?"
+      RECIPIENTS: '{{ .event.Commander }}'
+      RESPONSES: "Yes,No"
+      TIMEOUT: 5m
+    envFrom:
+      integrationRef: '{{ .params.slackIntegrationName }}'
+  - name: us-docker.pkg.dev/stackpulse/public/slack/channel/archive
+    id: slack_archive_war_room_channel
+    when: '{{ ieq .slack_response "Yes" }}'
+    env:
+      CHANNEL_NAME: "{{ .event.SlackWarRoomChannelName }}"
+    envFrom:
+      integrationRef: '{{ .params.slackIntegrationName }}'

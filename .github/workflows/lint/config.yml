@@ -1,0 +1,7 @@
+default: true # includes all rules by default
+
+# Inline HTML <https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md033>
+MD033: false
+
+# Line length <https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md013>
+MD013: false

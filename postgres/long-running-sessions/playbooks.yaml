@@ -1,0 +1,61 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: postgres-long-sessions
+parameters:
+- name: "runnerName"
+  type: var
+  description: "SPD runner name to run the psql commands onto"
+- name: "slackRecipient"
+  type: var
+  description: "Slack recipient to send the output to (can be channel, name, or multiple recipients)"
+- name: "host"
+  type: var
+  description: "Postgress DB host (without port)"
+- name: "port"
+  type: var
+  description: "Postgress DB port"
+- name: "db"
+  type: var
+  description: "Postgress DB name to query"
+- name: "user"
+  type: var
+  description: "Postgress DB user"
+- name: "password"
+  type: secret
+  description: "Postgress DB password"
+- name: "slackIntegrationName"
+  type: integration
+  description: "Slack integration"
+  options:
+    integration_type: slack
+steps:
+# Getting long running postgress sessions
+- name: us-docker.pkg.dev/stackpulse/public/psql/query/long-running-sessions
+  id: postgress_long_running_sessions
+  runner: '{{ .params.runnerName }}'
+  env:
+    DB: '{{ .params.db }}'
+    HOST: '{{ .params.host }}'
+    PASSWORD: '{{ secret .params.password }}'
+    PORT: '{{ .params.port }}'
+    USER: '{{ .params.user }}'
+# Will be executed only if there are any long running sessions
+- when: '{{ gt (len .data) 0 }}'
+  steps:
+  # Sending a table-like data of the long runnning sessions to slack
+  - name: us-docker.pkg.dev/stackpulse/public/parsers/tabulate
+    id: tabulate_postgres_query
+    env:
+      HEADERS: 'keys'
+      INPUT: '{{ toJson .data }}'
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: send_query_snippet
+    env:
+      SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+      CONTENT: '{{ .tabulate_output }}'
+      INITIAL_COMMENT: Displaying long running postgress sessions
+      RECIPIENTS: '{{ .params.slackRecipient }}'
+      TITLE: psql-long-running-sessions
+    envFrom:
+      integrationRef: '{{ .params.slackIntegrationName }}'

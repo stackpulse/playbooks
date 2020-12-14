@@ -1,0 +1,96 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: pod-restarting
+parameters:
+- name: "runnerName"
+  type: var
+  description: "SPD runner name to run the k8s commands onto"
+- name: "podName"
+  type: var
+  description: "Which pod is being restarted"
+- name: "containerName"
+  type: var
+  description: "Which container (inside the pod) is being restarted, if empty, will get logs from all of the containers inside the pod"
+- name: "namespace"
+  type: var
+  description: "Pod namespace"
+- name: "slackRecipient"
+  type: var
+  description: "Slack recipient to send the output to (can be channel, name, or multiple recipients)"
+- name: "slackIntegrationName"
+  type: integration
+  description: "Slack integration"
+  options:
+    integration_type: slack
+steps:
+# Getting pods from the namespace ordered by age
+- name: us-docker.pkg.dev/stackpulse/public/kubectl/get-pods
+  id: get_pods_by_age
+  runner: '{{ .params.runnerName }}'
+  env:
+    NAMESPACE: '{{ .params.namespace }}'
+    ORDER_BY: age
+# Will be executed only if there are any pods
+- when: '{{ gt (len .items) 0 }}'
+  steps:
+  # Sending a table-like data of the pods to slack
+  - name: us-docker.pkg.dev/stackpulse/public/parsers/tabulate
+    id: tabulate_pods
+    env:
+      HEADERS: '{"age":"Age", "name":"Name", "node":"Node", "status":"Status"}'
+      INCLUDE_FILTER: '["age", "name", "node", "status"]'
+      INPUT: '{{ if gt (len .items) 10 }}{{ toJson (slice .items 0 10) }}{{ else }}{{ toJson .items }}{{end}}'
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: send_latest_pods
+    env:
+      SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+      CONTENT: '{{ .tabulate_output }}'
+      INITIAL_COMMENT: Displaying last started pods from namespace {{ .params.namespace }}
+      RECIPIENTS: "{{ .params.slackRecipient }}"
+      TITLE: latest-started-pods
+    envFrom:
+      integrationRef: '{{ .params.slackIntegrationName }}'
+# Getting the logs of the current container in the pod (if the container name is not available, get logs from all of the containers)
+- name: us-docker.pkg.dev/stackpulse/public/kubectl/logs
+  id: get_logs_from_current_pod_container
+  runner: '{{ .params.runnerName }}'
+  env:
+    NAMESPACE: '{{ .params.namespace }}'
+    POD_NAME: '{{ .params.podName }}'
+    CONTAINER_NAME: '{{ .params.containerName }}'
+    ALL_CONTAINERS: '{{ eq .params.containerName "" }}'
+    SP_FORMATTER: "raw"
+# Sending the current logs to slack
+- name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+  id: send_logs_from_current_pod_container
+  env:
+    SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+    CONTENT: '{{ .output }}'
+    INITIAL_COMMENT: 'Displaying logs of current container{{ if eq .params.containerName "" }}s{{ else }} "{{ .params.containerName }}"{{ end }} in pod "{{ .params.podName }}"'
+    RECIPIENTS: '{{ .params.slackRecipient }}'
+    TITLE: pod-{{ .params.podName }}-container{{ .params.containerName }}-current
+  envFrom:
+    integrationRef: '{{ .params.slackIntegrationName }}'
+# Getting the logs of the previous container in the pod (if the container name is not available, get logs from all of the containers)
+- name: us-docker.pkg.dev/stackpulse/public/kubectl/logs
+  id: get_logs_from_previous_pod_container
+  runner: '{{ .params.runnerName }}'
+  env:
+    NAMESPACE: '{{ .params.namespace }}'
+    POD_NAME: '{{ .params.podName }}'
+    CONTAINER_NAME: '{{ .params.containerName }}'
+    ALL_CONTAINERS: '{{ eq .params.containerName "" }}'
+    PREVIOUS: true
+    SP_FORMATTER: "raw"
+# Sending the previous logs to slack
+- name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+  id: send_logs_from_previous_pod_container
+  env:
+    SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+    CONTENT: '{{ .output }}'
+    INITIAL_COMMENT: 'Displaying logs of previous container{{ if eq .params.containerName "" }}s{{ else }} "{{ .params.containerName }}"{{ end }} in pod "{{ .params.podName }}"'
+    RECIPIENTS: '{{ .params.slackRecipient }}'
+    TITLE: pod-{{ .params.podName }}-container{{ .params.containerName }}-previous
+  envFrom:
+    integrationRef: '{{ .params.slackIntegrationName }}'

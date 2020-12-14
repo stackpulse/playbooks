@@ -1,0 +1,43 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: redis-get-big-keys
+parameters:
+  - name: "runnerName"
+    type: var
+    description: "SPD runner name to run the Redis commands on"
+  - name: "redisHost"
+    type: var
+    description: "The host or IP of the Redis endpoint you would like to query"
+  - name: "redisPassword"
+    type: secret
+    description: "Redis password."
+  - name: "slackRecipient"
+    type: var
+    description: "Slack recipient to send the output to. Can be a channel (with '#'), user email, or multiple recipients"
+  - name: "slackIntegrationName"
+    type: integration
+    description: "Slack integration"
+    options:
+      integration_type: slack
+steps:
+# Query the redis endpoint for big keys
+- name: us-docker.pkg.dev/stackpulse/public/redis/bigkeys
+  id: redis_query_big_keys
+  env:
+    REDIS_IP: '{{ .params.redisHost }}'
+    REDIS_PASSWORD: '{{ secret .params.redisPassword }}'
+  runner: '{{ .params.runnerName }}'
+  output_parser:
+    name: us-docker.pkg.dev/stackpulse/public/raw-output-parser
+# Sending the resulting logs to Slack
+- name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+  id: send-big-keys-output-to-slack
+  env:
+    SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+    CONTENT: '{{ .output }}'
+    INITIAL_COMMENT: 'Displaying Redis big keys'
+    RECIPIENTS: '{{ .params.slackRecipient }}'
+    TITLE: redis-latest-big-keys
+  envFrom:
+    integrationRef: '{{ .params.SlackIntegrationName }}'
