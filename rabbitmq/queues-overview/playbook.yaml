@@ -57,7 +57,7 @@ steps:
       id: send_top_queues
       env:
         SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
-        INITIAL_COMMENT: "Disaplyaing RabbitMQ {{ .value.description }} - by key `{{ .key }}`. For queues' full details, see referenced execution."
+        INITIAL_COMMENT: "Displaying RabbitMQ {{ .value.description }} - by key `{{ .key }}`. For queues' full details, see referenced execution."
         CONTENT: '{{ .tabulate_output }}'
         TITLE: 'top-queues-key-{{ .key }}'
         RECIPIENTS: '{{ .params.slackRecipient }}'
