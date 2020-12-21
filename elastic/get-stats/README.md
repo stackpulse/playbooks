@@ -2,7 +2,6 @@
 
 <img src="../../images/elastic.png" width="150">
 
-![type](https://img.shields.io/badge/type-triage-green)
 ![service](https://img.shields.io/static/v1?label=service&message=Elasticsearch&style=flat&logo=Elasticsearch&color=00BFB3)
 ![uses-slack](https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B)
 

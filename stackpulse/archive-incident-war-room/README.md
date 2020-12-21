@@ -2,7 +2,6 @@
 
 <img src="../../images/stackpulse.png" width="100" alt="StackPulse">
 
-![type](https://img.shields.io/badge/type-notification-green)
 ![uses-slack](https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B)
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/stackpulse/archive-incident-war-room/playbook.yaml)

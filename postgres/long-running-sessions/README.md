@@ -13,7 +13,7 @@ This playbook collects all non-idle long running sessions from PostgresSQL insta
 
 ## Your benefits
 
-- Quickliy identify long running sessions which can cause performance overheads
+- Quickly identify long running sessions which can cause performance overheads
 - Initiate triage by finding the applications which running the long sessions queries
 - Provide information from production PostgresSQL instance without having to provide multiple people direct access to production
 - Assist engineers to handle production issues by getting wider context regardless of their PostgresSQL expertise level

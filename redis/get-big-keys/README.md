@@ -2,7 +2,6 @@
 
 <img src="../../images/redis.svg" width="100" alt="Redis">
 
-![type](https://img.shields.io/badge/type-triage-green)
 ![service](https://img.shields.io/static/v1?label=service&message=Redis&style=flat&logo=Redis&color=A41E11)
 ![uses-slack](https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B)
 

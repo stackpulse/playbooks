@@ -2,7 +2,6 @@
 
 <img src="../../images/stackpulse.png" width="100" alt="StackPulse">
 
-![type](https://img.shields.io/badge/type-notification-green)
 ![uses-slack](https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B)
 ![uses-zoom](https://img.shields.io/static/v1?label=uses&message=Zoom&style=flat&logo=zoom&color=2D8CFF)
 ![uses-pagerduty](https://img.shields.io/static/v1?label=uses&message=PagerDuty&style=flat&logo=pagerduty&color=47BA04)

@@ -1,0 +1,33 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: hello-world
+parameters:
+  - name: slackRecipient
+    type: var
+    description: "Slack recipient to send the output to. Can be a channel (with #), user email, or multiple recipients)"
+  - name: slackIntegrationName
+    type: integration
+    description: Slack integration
+    options:
+      integration_type: slack
+steps:
+  - name: us-docker.pkg.dev/stackpulse/public/echo
+    id: hello_world_echo
+    env:
+      MESSAGE: >
+        Congratulations!
+
+        You’ve successfully integrated StackPulse with Slack and triggered your first playbook.
+        Find more playbooks on StackPulse repository (https://github.com/stackpulse/playbooks)
+        Or add more integrations to StackPulse (https://app.stackpulse.io/integrations)
+        Use /stackpulse help to see what you can do in Slack
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
+    id: hello_world_slack
+    when: '{{ ne .params.slackIntegrationName "" }}'
+    env:
+      MESSAGE_TEXT: "Congratulations!\nYou’ve successfully integrated StackPulse with Slack and triggered your first playbook.\nFind more playbooks on <https://github.com/stackpulse/playbooks|StackPulse repository>\nOr <https://app.stackpulse.io/integrations|add more integrations> to StackPulse \nUse `/stackpulse help` to see what you can do in Slack\n"
+      SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
+      RECIPIENTS: "{{ .params.slackRecipient }}"
+    envFrom:
+      integrationRef: "{{ .params.slackIntegrationName }}"
