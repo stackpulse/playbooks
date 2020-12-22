@@ -1,7 +1,7 @@
 apiVersion: stackpulse.io/v1
 kind: Playbook
 metadata:
-  name: hello-world
+  name: hello-world-slack
 parameters:
   - name: slackRecipient
     type: var
@@ -23,7 +23,7 @@ steps:
     id: hello_world_slack
     when: '{{ ne .params.slackIntegrationName "" }}'
     env:
-      MESSAGE_TEXT: "Congratulations!\nYou’ve successfully integrated StackPulse with Slack and triggered your first playbook.\n\nWhat's next?\n\n- Find more <{{ .params.stackpulsePlaybooksURL }}|playbooks> on StackPulse repository\n- To enrich your automation capabilities, add more <https://app.stackpulse.io/integrations|integrations>\n- Use `/stackpulse help` to see what you can do in Slack\n- For more information, checkout our <https://docs.stackpulse.io|documentation>\n\nWant to know what just happened? check out the <https://app.stackpulse.io/playbook/{{ .metadata.playbookId }}|Trigger & Playbook>"
+      MESSAGE_TEXT: "Congratulations!\nYou’ve successfully integrated StackPulse with Slack and triggered your first playbook.\n\nWhat's next?\n\n- Find more <{{ .params.stackpulsePlaybooksURL }}|playbooks> in the StackPulse repository\n- To enrich your automation capabilities, add more <https://app.stackpulse.io/integrations|integrations>\n- Use `/stackpulse help` to see what you can do in Slack\n- For more information, checkout our <https://docs.stackpulse.io|documentation>\n\nWant to know what just happened? check out the <https://app.stackpulse.io/playbook/{{ .metadata.playbookId }}|Trigger & Playbook>"
       SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
       RECIPIENTS: "{{ .params.slackRecipient }}"
     envFrom:

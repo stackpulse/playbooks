@@ -10,9 +10,8 @@ This playbook demonstrates basic StackPulse automation.
 
 ## Your benefits
 
-- Try StackPulse
-- Understand basic StackPulse terms and usage
-- Start creating your own playbooks!
+- Automate your first playbook in StackPulse
+- Learn of StackPulse fundamental terms, flow and usage
 
 ## Your experience
 
