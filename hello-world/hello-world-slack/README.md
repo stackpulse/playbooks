@@ -4,7 +4,7 @@
 
 ![uses-slack](https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B)
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/postgres/long-running-sessions/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/hello-world/hello-world-slack/playbook.yaml)
 
 This playbook demonstrates basic StackPulse automation. 
 
@@ -12,6 +12,7 @@ This playbook demonstrates basic StackPulse automation.
 
 - Try StackPulse
 - Understand basic StackPulse terms and usage
+- Start creating your own playbooks!
 
 ## Your experience
 
@@ -19,7 +20,7 @@ This playbook demonstrates basic StackPulse automation.
 
 ## How to get started
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/postgres/long-running-sessions/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/hello-world/hello-world-slack/playbook.yaml)
 
 Not a Stackpulse user? Follow these steps:
 
