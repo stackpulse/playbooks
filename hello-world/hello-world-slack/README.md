@@ -6,7 +6,7 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/hello-world/hello-world-slack/playbook.yaml)
 
-This playbook demonstrates basic StackPulse automation. 
+This playbook demonstrates basic StackPulse automation.
 
 ## Your benefits
 
