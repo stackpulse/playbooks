@@ -5,7 +5,7 @@ metadata:
 parameters:
   - name: "notificationChannel"
     type: var
-    description: "The name of the channel you would like to notify about the incident."
+    description: "The name of the channel you would like to notify about the incident (without a #)."
   - name: "zoomAPIKey"
     type: secret
     description: "Zoom API Key."
