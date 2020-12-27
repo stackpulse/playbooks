@@ -32,7 +32,6 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
      It gets the latest started pods in the namespace provided either by alert or by the user, then gets the current and previous (if exists) logs of the relevant container.
      <br><br>
     <div style="padding-top:1px">
-        <img src="https://img.shields.io/badge/type-triage-green" alt="type">
         <img src="https://img.shields.io/static/v1?label=env&message=Kubernetes&style=flat&logo=Kubernetes&color=326CE5" alt="env">
         <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
     </div>
@@ -56,7 +55,6 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
       <a href="https://github.com/stackpulse/playbooks/tree/master/postgres/long-running-sessions"><b>Postgres Long Running Sessions</b></a><br><br>
       This playbook collects all non-idle long running sessions from PostgresSQL instance and send it to Slack recipients.<br><br>
     <div style="padding-top:1px">
-        <img src="https://img.shields.io/badge/type-triage-green" alt="type">
         <img src="https://img.shields.io/static/v1?label=env&message=Kubernetes&style=flat&logo=Kubernetes&color=326CE5" alt="env">
         <img src="https://img.shields.io/static/v1?label=service&message=PostgresSQL&style=flat&logo=PostgreSQL&color=336791" alt="service">
         <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
@@ -81,7 +79,6 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
       <a href="https://github.com/stackpulse/playbooks/tree/master/rabbitmq/queues-overview"><b>RabbitMQ Queues Overview</b></a><br><br>
       This playbook collects an overview about RabbitMQ instance and classify it's most consumption queues by: <code>messages</code>, <code>unacknowledged messages</code>, <code>messages bytes</code> and <code>memory</code> and send it to Slack recipients.<br><br>
     <div style="padding-top:1px">
-        <img src="https://img.shields.io/badge/type-triage-green" alt="type">
         <img src="https://img.shields.io/static/v1?label=env&message=Kubernetes&style=flat&logo=Kubernetes&color=326CE5" alt="env">
         <img src="https://img.shields.io/static/v1?label=service&message=RabbitMQ&style=flat&logo=RabbitMQ&color=FF6600" alt="service">
         <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
@@ -106,7 +103,6 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
       <a href="https://github.com/stackpulse/playbooks/tree/master/elastic/get-stats"><b>Elasticsearch Get Stats</b></a><br><br>
       This playbook collects info, stats and metrics from an Elasticsearch cluster and sends it to Slack.<br><br>
     <div style="padding-top:1px">
-        <img src="https://img.shields.io/badge/type-triage-green" alt="type">
         <img src="https://img.shields.io/static/v1?label=service&message=Elasticsearch&style=flat&logo=Elasticsearch&color=00BFB3" alt="service">
         <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
     </div>
@@ -131,7 +127,6 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
       This playbook queries a Redis host and retrieves the current big keys.
       It then sends that output to Slack recipients of your choice as a snippet.<br><br>
     <div style="padding-top:1px">
-        <img src="https://img.shields.io/badge/type-triage-green" alt="type">
         <img src="https://img.shields.io/static/v1?label=service&message=Redis&style=flat&logo=Redis&color=A41E11" alt="service">
         <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
     </div>
@@ -160,7 +155,6 @@ Playbooks in this section help automate incident management and communication fl
     <td>
       <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room"><b>Create Incident War-room (Slack, Zoom, PagerDuty)</b></a><br><br>Playbook that creates Incident War Room in Slack (and/or Video Conferencing software), invites the relevant participants based on incident details (and/or on on-call rotation schedules).<br><br>
         <div style="padding-top:1px">
-            <img src="https://img.shields.io/badge/type-notification-green" alt="type">
             <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
             <img src="https://img.shields.io/static/v1?label=uses&message=Zoom&style=flat&logo=zoom&color=2D8CFF" alt="zoom">
             <img src="https://img.shields.io/static/v1?label=uses&message=PagerDuty&style=flat&logo=pagerduty&color=47BA04" alt="pagerduty">
@@ -184,7 +178,6 @@ Playbooks in this section help automate incident management and communication fl
     <td>
       <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/archive-incident-war-room"><b>Archive Incident War-room (Slack)</b></a><br><br>Playbook that runs upon incident resolution and asks the incident commander whether to archive the Slack War-room that belonged to the incident.<br><br>
         <div style="padding-top:1px">
-            <img src="https://img.shields.io/badge/type-notification-green" alt="type">
             <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
         </div>
         <div style="margin-top:15px">
