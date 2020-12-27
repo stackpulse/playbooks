@@ -2,7 +2,6 @@
 
 <img src="../../images/rabbitmq.png" width="100">
 
-![type](https://img.shields.io/badge/type-triage-green)
 ![env](https://img.shields.io/static/v1?label=env&message=Kubernetes&style=flat&logo=Kubernetes&color=326CE5)
 ![service](https://img.shields.io/static/v1?label=service&message=RabbitMQ&style=flat&logo=RabbitMQ&color=FF6600)
 ![uses-slack](https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B)

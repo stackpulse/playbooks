@@ -1,0 +1,30 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: hello-world-slack
+parameters:
+  - name: slackRecipient
+    type: var
+    description: "Slack recipient to send the output to. Can be a channel (with #), user email, or multiple recipients)"
+  - name: stackpulsePlaybooksURL
+    type: var
+    description: "The URL of stackpulse playbooks repository"
+  - name: slackIntegrationName
+    type: integration
+    description: Slack integration
+    options:
+      integration_type: slack
+steps:
+  - name: us-docker.pkg.dev/stackpulse/public/echo
+    id: hello_world_echo
+    env:
+      MESSAGE: -e Congratulations!\nYou’ve successfully triggered your first playbook.\n\nWhat's next?\n\n- Find more playbooks on StackPulse repository ({{ .params.stackpulsePlaybooksURL }})\n- To enrich your automation capabilities, add more integrations (https://app.stackpulse.io/integrations)\n- Use `/stackpulse help` to see what you can do in Slack\n- For more information, checkout our documentation (https://docs.stackpulse.io)\n\nWant to know what just happened? check out the Trigger & Playbook (https://app.stackpulse.io/playbook/{{ .metadata.playbookId }})
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
+    id: hello_world_slack
+    when: '{{ ne .params.slackIntegrationName "" }}'
+    env:
+      MESSAGE_TEXT: "Congratulations!\nYou’ve successfully integrated StackPulse with Slack and triggered your first playbook.\n\nWhat's next?\n\n- Find more <{{ .params.stackpulsePlaybooksURL }}|playbooks> in the StackPulse repository\n- To enrich your automation capabilities, add more <https://app.stackpulse.io/integrations|integrations>\n- Use `/stackpulse help` to see what you can do in Slack\n- For more information, checkout our <https://docs.stackpulse.io|documentation>\n\nWant to know what just happened? check out the <https://app.stackpulse.io/playbook/{{ .metadata.playbookId }}|Trigger & Playbook>"
+      SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
+      RECIPIENTS: "{{ .params.slackRecipient }}"
+    envFrom:
+      integrationRef: "{{ .params.slackIntegrationName }}"
