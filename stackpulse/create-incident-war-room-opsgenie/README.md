@@ -31,7 +31,7 @@ Not a Stackpulse user? Follow these steps:
 
 1. Make sure your have a [StackPulse](https://stackpulse.com/get-started) account
 2. Configure a new [Slack integration](https://docs.stackpulse.io/getting_started/#step-3-configure-a-new-slack-integration)
-3. Configure a new OpsGenie integration
+3. Configure a new [OpsGenie integration](https://docs.stackpulse.io/integrations/#opsgenie)
 4. Set up your Zoom API keys as [Custom Secrets](https://docs.stackpulse.io/integrations/#custom-integrations-secrets)
 5. Import [this playbook](https://app.stackpulse.io/playbooks) into your account
 6. Connect it to be triggered by incident creation events
