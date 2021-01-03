@@ -32,8 +32,6 @@ parameters:
   - name: opsgenieUseEUApi
     type: var
     description: set to true to use Opsgenie EU region.
-    options:
-      integration_type: opsgenie
 steps:
   - name: us-docker.pkg.dev/stackpulse/public/zoom/meeting/create
     id: zoom_create_meeting
