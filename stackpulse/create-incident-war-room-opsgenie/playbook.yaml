@@ -38,73 +38,61 @@ steps:
   - name: us-docker.pkg.dev/stackpulse/public/zoom/meeting/create
     id: zoom_create_meeting
     env:
-      HOST_EMAIL: "{{ .event.Reporter }}"
-      MEETING_TOPIC: StackPulse War Room for Incident {{ .event.Name }} ({{ .event.ID }})
-      ZOOM_API_KEY: "{{ secret .params.zoomAPIKey }}"
-      ZOOM_API_SECRET: "{{ secret .params.zoomAPISecret }}"
+      HOST_EMAIL: "{{ $.event.Reporter }}"
+      MEETING_TOPIC: "StackPulse War Room for Incident {{ $.event.Name }} ({{ $.event.ID }})"
+      ZOOM_API_KEY: '{{ secret $.params.zoomAPIKey }}'
+      ZOOM_API_SECRET: '{{ secret $.params.zoomAPISecret }}'
   - name: us-docker.pkg.dev/stackpulse/public/slack/channel/create
     id: slack_create_war_room_channel
     env:
-      CHANNEL_NAME: incident {{ .event.Name }} {{.event.ID }}
-      PURPOSE: "{{ .event.Description }}"
-      TOPIC: >-
-        StackPulse War Room Channel for Incident {{ .event.Name }} ({{ .event.ID
-        }})
-         Zoom meeting link - {{ .join_url}}
-      USERS: "{{ .event.Reporter }}"
+      CHANNEL_NAME: "incident {{ $.event.Name }} {{$.event.ID }}"
+      PURPOSE: '{{ $.event.Description }}'
+      TOPIC: "StackPulse War Room Channel for Incident {{ $.event.Name }} ({{ $.event.ID }})\n Zoom meeting link - {{ $.join_url }}"
+      USERS: '{{ $.event.Reporter }}'
     envFrom:
-      integrationRef: "{{ .params.slackIntegrationName }}"
+      integrationRef: '{{ $.params.slackIntegrationName }}'
   - name: us-docker.pkg.dev/stackpulse/public/stackpulse/incident/update
     id: attach_war_room_channel_to_incident
     env:
-      INCIDENT_ID: "{{ .event.ID }}"
-      SLACK_WAR_ROOM_NAME: "{{ .channel_name }}"
+      INCIDENT_ID: '{{ $.event.ID }}'
+      SLACK_WAR_ROOM_NAME: '{{ $.channel_name }}'
     envFrom:
-      integrationRef: "{{ .params.slackIntegrationName }}"
+      integrationRef: '{{ $.params.slackIntegrationName }}'
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
     id: slack_alert_notification_channel
     env:
-      SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
-      MESSAGE_TEXT: >-
-        @channel, StackPulse created an incident
-        https://app.stackpulse.io/incident/{{ .event.ID}}
-
-        A War Room was created - #{{ .channel_name }}
-         A Zoom Meeting was created - {{ .join_url}}
-      RECIPIENTS: "#{{ .params.notificationChannel }}"
+      SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ $.execution.id }}
+      MESSAGE_TEXT: "@channel, StackPulse created an incident https://app.stackpulse.io/incident/{{ $.event.ID }}\nA War Room was created - #{{ $.channel_name }}\n A Zoom Meeting was created - {{ $.join_url }} "
+      RECIPIENTS: "#{{ $.params.notificationChannel }}"
     envFrom:
-      integrationRef: "{{ .params.slackIntegrationName }}"
+      integrationRef: '{{ $.params.slackIntegrationName }}'
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
     id: slack_alert_war_room_channel
     env:
-      SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
-      MESSAGE_TEXT: >-
-        @channel, StackPulse created an incident
-        https://app.stackpulse.io/incident/{{ .event.ID}}
-
-        A War Room was created - #{{ .channel_name }}
-         A Zoom Meeting was created - {{ .join_url}}
-      RECIPIENTS: "#{{ .channel_name }}"
+      SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ $.execution.id }}
+      MESSAGE_TEXT: "@channel, StackPulse created an incident https://app.stackpulse.io/incident/{{ $.event.ID }}\nA War Room was created - #{{ $.channel_name }}\n A Zoom Meeting was created - {{ $.join_url }}"
+      RECIPIENTS: "#{{ $.channel_name }}"
     envFrom:
-      integrationRef: "{{ .params.slackIntegrationName }}"
+      integrationRef: '{{ $.params.slackIntegrationName }}'
+  # interactively ask the reporter whether to page the on caller on OpsGenie
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
     id: slack_ask_on_caller_paging
     env:
       DEFAULT_RESPONSE: "No"
-      QUESTION: Would you like to page the on-caller?
-      RECIPIENTS: "{{ .event.Reporter }}"
-      RESPONSES: Yes,No
+      QUESTION: "Would you like to page the on-caller?"
+      RECIPIENTS: '{{ $.event.Reporter }}'
+      RESPONSES: "Yes,No"
       TIMEOUT: 2m
     envFrom:
-      integrationRef: "{{ .params.slackIntegrationName }}"
+      integrationRef: '{{ $.params.slackIntegrationName }}'
   - name: us-docker.pkg.dev/stackpulse/public/opsgenie/incident/create
     id: opsgenie_create_incident
-    when: '{{ ieq .slack_response "Yes" }}'
+    when: '{{ ieq $.slack_response "Yes" }}'
     env:
-      USE_EU_API: "{{ .params.opsgenieUseEUApi }}"
-      SERVICE_NAME: "{{ .params.pagerDutyService }}"
-      MESSAGE: "{{ .event.Name | kebabcase}}-{{.event.ID | kebabcase}}"
-      DESCRIPTION: "{{ .event.Name | kebabcase}}-{{.event.ID | kebabcase}} created by StackPulse"
-      PRIORITY: '{{ if ieq .event.Severity "normal" }}P3{{else if "high"}}P2{{ else }}P1{{ end }}'
+      USE_EU_API: "{{ $.params.opsgenieUseEUApi }}"
+      SERVICE_NAME: "{{ $.params.pagerDutyService }}"
+      MESSAGE: "{{ $.event.Name | kebabcase }}-{{ $.event.ID | kebabcase }}"
+      DESCRIPTION: "{{ $.event.Name | kebabcase }}-{{ $.event.ID | kebabcase }} created by StackPulse"
+      PRIORITY: '{{ if ieq $.event.Severity "normal" }}P3{{ else if "high" }}P2{{ else }}P1{{ end }}'
     envFrom:
-      integrationRef: "{{ .params.opsgenieIntegrationName }}"
+      integrationRef: "{{ $.params.opsgenieIntegrationName }}"
