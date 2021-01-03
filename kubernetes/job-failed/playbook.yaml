@@ -1,0 +1,69 @@
+---
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: job-failed
+  description: Inspect failed job and optionally delete
+parameters:
+  - name: runner
+    type: var
+  - name: namespace
+    type: var
+  - name: job_name
+    type: var
+  - name: recipient
+    type: var
+steps:
+  - name: us-docker.pkg.dev/stackpulse/public/kubectl/get-pods
+    id: get-pods
+    runner: stackpulse-production
+    env:
+      NAMESPACE: '{{ $.params.namespace }}'
+      NAME_CONTAINS: '{{ $.params.job_name }}'
+      FIELD_SELECTOR: "status.phase=Failed"
+
+  - foreach:
+      in: filtered
+      key: key
+      value: value
+      steps:
+        - name: us-docker.pkg.dev/stackpulse/public/kubectl/logs
+          runner: "{{ .params.runner }}"
+          env:
+            NAMESPACE: '{{ $.params.namespace }}'
+            POD_NAME: '{{ .value.name }}'
+            SP_FORMATTER: "raw"
+            ALL_CONTAINERS: "true"
+
+        - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+          envFrom:
+            integrationRef: slack-alerts
+          env:
+            CONTENT: "{{ .output }}"
+            RECIPIENTS: "{{ .params.recipient }}"
+            SP_REDIRECT_URL: https://app.stg.stackpulse.io/execution/{{ .execution.id }}
+            SP_ENV_URL: "slack-app.stg.stackpulse.io:443"
+
+  - name: gcr.io/stackpulse/steps/slack/send_interactive_message
+    id: Ask permission to delete
+    env:
+      SP_REDIRECT_URL: https://app.stg.stackpulse.io/execution/{{ .execution.id }}
+      HEADER_MESSAGE: Hello
+      RECIPIENTS: "{{ .params.recipient }}"
+      QUESTION: "Delete job {{ $.params.job_name }}?"
+      RESPONSES_JSON: '{"No": false, "Yes": true}'
+      MESSAGE_TYPE: "BUTTONS_SELECT"
+      TIMEOUT: "30m"
+      DEFAULT_RESPONSE: "Yes"
+      SP_ENV_URL: "slack-app.stg.stackpulse.io:443"
+    envFrom:
+      integrationRef: slack-alerts
+
+  - when: '{{ eq .slack_response "yes" }}'
+    steps:
+      - name: us-docker.pkg.dev/stackpulse/public/kubectl/delete
+        runner: "{{ .params.runner }}"
+        id: kubectl-delete
+        env:
+          RESOURCE_TYPE: "job"
+          RESOURCES_NAMES: "{{ $.params.job_name }}"
