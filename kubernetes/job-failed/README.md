@@ -5,7 +5,7 @@
 ![env](https://img.shields.io/static/v1?label=env&message=Kubernetes&style=flat&logo=Kubernetes&color=326CE5)
 ![uses-slack](https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B)
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/kubernetes/cronjob-failed/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/kubernetes/job-failed/playbook.yaml)
 
 This playbook will help you extract the logs from a failed job and help you optionally delete it once you understand the root cause.
 
@@ -17,12 +17,11 @@ This playbook will help you extract the logs from a failed job and help you opti
 
 ## Your experience
 
-![slack_screenshot](../../images/k8s_recent_pods.png)
-![slack_screenshot](../../images/k8s_logs_current_container.png)
+![slack_screenshot](../../images/job_logs.png)
 
 ## How to get started
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/kubernetes/pod-restarting/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/kubernetes/job-restarting/playbook.yaml)
 
 Not a Stackpulse user? Follow these steps:
 

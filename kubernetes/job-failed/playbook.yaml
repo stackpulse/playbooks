@@ -13,10 +13,15 @@ parameters:
     type: var
   - name: recipient
     type: var
+  - name: slack_integration
+    type: integration
+    description: Slack integration
+    options:
+      integration_type: slack
 steps:
   - name: us-docker.pkg.dev/stackpulse/public/kubectl/get-pods
     id: get-pods
-    runner: stackpulse-production
+    runner: "{{ $.params.runner }}"
     env:
       NAMESPACE: '{{ $.params.namespace }}'
       NAME_CONTAINS: '{{ $.params.job_name }}'
@@ -28,7 +33,7 @@ steps:
       value: value
       steps:
         - name: us-docker.pkg.dev/stackpulse/public/kubectl/logs
-          runner: "{{ .params.runner }}"
+          runner: "{{ $.params.runner }}"
           env:
             NAMESPACE: '{{ $.params.namespace }}'
             POD_NAME: '{{ .value.name }}'
@@ -37,32 +42,30 @@ steps:
 
         - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
           envFrom:
-            integrationRef: slack-alerts
+            integrationRef: "{{ $.params.slack_integration }}"
           env:
             CONTENT: "{{ .output }}"
             RECIPIENTS: "{{ .params.recipient }}"
-            SP_REDIRECT_URL: https://app.stg.stackpulse.io/execution/{{ .execution.id }}
-            SP_ENV_URL: "slack-app.stg.stackpulse.io:443"
+            SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
 
   - name: gcr.io/stackpulse/steps/slack/send_interactive_message
     id: Ask permission to delete
+    envFrom:
+      integrationRef: "{{ $.params.slack_integration }}"
     env:
-      SP_REDIRECT_URL: https://app.stg.stackpulse.io/execution/{{ .execution.id }}
+      SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
       HEADER_MESSAGE: Hello
-      RECIPIENTS: "{{ .params.recipient }}"
+      RECIPIENTS: "{{ $.params.recipient }}"
       QUESTION: "Delete job {{ $.params.job_name }}?"
-      RESPONSES_JSON: '{"No": false, "Yes": true}'
+      RESPONSES_JSON: '{"No": "no", "Yes": "yes"}'
       MESSAGE_TYPE: "BUTTONS_SELECT"
       TIMEOUT: "30m"
       DEFAULT_RESPONSE: "Yes"
-      SP_ENV_URL: "slack-app.stg.stackpulse.io:443"
-    envFrom:
-      integrationRef: slack-alerts
 
   - when: '{{ eq .slack_response "yes" }}'
     steps:
       - name: us-docker.pkg.dev/stackpulse/public/kubectl/delete
-        runner: "{{ .params.runner }}"
+        runner: "{{ $.params.runner }}"
         id: kubectl-delete
         env:
           RESOURCE_TYPE: "job"
