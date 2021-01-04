@@ -44,7 +44,7 @@ steps:
           envFrom:
             integrationRef: "{{ $.params.slack_integration }}"
           env:
-            CONTENT: "{{ .output }}"
+            CONTENT: "{{ $.output }}"
             RECIPIENTS: "{{ $.params.recipient }}"
             SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
 
@@ -62,7 +62,7 @@ steps:
       TIMEOUT: "30m"
       DEFAULT_RESPONSE: "Yes"
 
-  - when: '{{ eq .slack_response "yes" }}'
+  - when: '{{ eq $.slack_response "yes" }}'
     steps:
       - name: us-docker.pkg.dev/stackpulse/public/kubectl/delete
         runner: "{{ $.params.runner }}"
