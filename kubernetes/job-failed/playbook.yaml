@@ -45,7 +45,7 @@ steps:
             integrationRef: "{{ $.params.slack_integration }}"
           env:
             CONTENT: "{{ .output }}"
-            RECIPIENTS: "{{ .params.recipient }}"
+            RECIPIENTS: "{{ $.params.recipient }}"
             SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
 
   - name: gcr.io/stackpulse/steps/slack/send_interactive_message
