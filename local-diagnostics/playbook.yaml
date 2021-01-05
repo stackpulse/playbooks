@@ -53,7 +53,6 @@ steps:
     id: send_ps_output
     env:
       SP_REDIRECT_URL: '{{ $.metadata.executionUrl }}'
-      SP_ENV_URL: slack-app.dev.stackpulse.io:443
       CONTENT: "{{ $.process_stat_step.output }}"
       INITIAL_COMMENT: Information about a selection of the active proccess for the host {{ $.params.hostname }}
       RECIPIENTS: "{{ $.params.slackChannel }}"
@@ -64,7 +63,6 @@ steps:
     id: send_df_output
     env:
       SP_REDIRECT_URL: '{{ $.metadata.executionUrl }}'
-      SP_ENV_URL: slack-app.dev.stackpulse.io:443
       CONTENT: "{{ $.storage_step.output }}"
       INITIAL_COMMENT: Information about machine storage devices {{ $.params.hostname }}
       RECIPIENTS: "{{ $.params.slackChannel }}"
@@ -75,7 +73,6 @@ steps:
     id: send_vmstat_output
     env:
       SP_REDIRECT_URL: '{{ $.metadata.executionUrl }}'
-      SP_ENV_URL: slack-app.dev.stackpulse.io:443
       CONTENT: "{{ $.vmstat_step.output }}"
       INITIAL_COMMENT: Information about processes, memory, paging, block IO, traps, and cpu activity for the host {{ $.params.hostname }}
       RECIPIENTS: "{{ $.params.slackChannel }}"
