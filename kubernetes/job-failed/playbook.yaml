@@ -23,8 +23,8 @@ steps:
     id: get-pods
     runner: "{{ $.params.runner }}"
     env:
-      NAMESPACE: '{{ $.params.namespace }}'
-      NAME_CONTAINS: '{{ $.params.job_name }}'
+      NAMESPACE: "{{ $.params.namespace }}"
+      NAME_CONTAINS: "{{ $.params.job_name }}"
       FIELD_SELECTOR: "status.phase=Failed"
 
   - foreach:
@@ -35,8 +35,8 @@ steps:
         - name: us-docker.pkg.dev/stackpulse/public/kubectl/logs
           runner: "{{ $.params.runner }}"
           env:
-            NAMESPACE: '{{ $.params.namespace }}'
-            POD_NAME: '{{ .value.name }}'
+            NAMESPACE: "{{ $.params.namespace }}"
+            POD_NAME: "{{ .value.name }}"
             SP_FORMATTER: "raw"
             ALL_CONTAINERS: "true"
 
@@ -46,7 +46,7 @@ steps:
           env:
             CONTENT: "{{ $.output }}"
             RECIPIENTS: "{{ $.params.recipient }}"
-           SP_REDIRECT_URL: {{ $.metadata.executionUrl }}
+            SP_REDIRECT_URL: {{ $.metadata.executionUrl }}
 
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
     id: Ask permission to delete
