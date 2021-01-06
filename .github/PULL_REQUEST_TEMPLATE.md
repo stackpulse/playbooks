@@ -6,16 +6,13 @@
 <!---  Put an `x` in all the boxes that apply: -->
 
 ### General
-- [ ] Go over texts with @rzsp
+- [ ] Go over texts with @stackpulse/product
 
 ### New playbooks
 - [ ] Tested Playbook in a production tenant
+- [ ] Added a link in the [README.MD](https://github.com/stackpulse/playbooks/blob/master/README.md)
 
 
 ## Screenshot
 
 <!-- please include a screenshot or a GIF/MP4 of how it works. -->
-
-## Checklist - TBD
-
-- [ ] I have read [Contribution Guidelines](https://github.com/stackpulse/playbooks/blob/master/CONTRIBUTING.md)
