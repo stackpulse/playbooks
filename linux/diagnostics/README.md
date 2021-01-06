@@ -18,7 +18,7 @@ This playbook queries utilization of CPU, memory and storage for a given host an
 
 ## How to get started
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/redis/get-big-keys/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/linux/diagnostics/playbook.yaml)
 
 Not a Stackpulse user? Follow these steps:
 

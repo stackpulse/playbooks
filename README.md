@@ -139,6 +139,29 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
 
 <br>
 
+<table border=2 border-style=outset>
+  <tr>
+    <td border=0 width="110">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/redis/get-big-keys">
+        <img src="images/ssh.png"/>
+      </a>
+    </td>
+    <td>
+      <a href="https://github.com/stackpulse/playbooks/tree/master/redis/get-big-keys"><b>Linux Diagnostics</b></a><br><br>
+      This playbook queries utilization of CPU, memory and storage for a given host and sends the output to Slack recipients of choice.<br><br>
+    <div style="padding-top:1px">
+        <img src="https://img.shields.io/static/v1?label=service&message=Redis&style=flat&logo=Redis&color=A41E11" alt="ssh">
+        <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
+    </div>
+    <div style="margin-top:15px">
+        <a href="https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/linux/diagnostics/playbook.yaml" target="_blank" style="vertical-align:middle"><img src="images/open_in_stackpulse.svg" alt="import_in_stackpulse" width="130"></a>
+    </div>
+   </td>
+  </tr>
+</table>
+
+<br>
+
 ## Incident Management and Orchestration
 
 Playbooks in this section help automate incident management and communication flows across the organization or specific per teams and services.
