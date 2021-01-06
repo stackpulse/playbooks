@@ -123,7 +123,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
       </a>
     </td>
     <td>
-      <a href="https://github.com/stackpulse/playbooks/tree/master/linux/diagnostics"><b>Redis Get Big Keys</b></a><br><br>
+      <a href="https://github.com/stackpulse/playbooks/tree/master/redis/get-big-keys"><b>Redis Get Big Keys</b></a><br><br>
       This playbook queries a Redis host and retrieves the current big keys.
       It then sends that output to Slack recipients of your choice as a snippet.<br><br>
     <div style="padding-top:1px">
