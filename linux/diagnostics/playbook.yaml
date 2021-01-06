@@ -1,7 +1,7 @@
 apiVersion: stackpulse.io/v1
 kind: Playbook
 metadata:
-  name: ssh-diagnostics
+  name: linux-diagnostics
   description: This playbook fetch data regarding cpu usage, memory and storage for given machine
 parameters:
   - name: username
@@ -10,9 +10,6 @@ parameters:
   - name: hostname
     type: var
     description: hostname for the remote machine
-  - name: port
-    type: var
-    description: ssh port
   - name: sshKey
     type: secret
     description: private key access the remote machine via ssh
@@ -25,29 +22,26 @@ parameters:
     type: var
     description: Destination slack channel 
 steps:
-  - name: us-docker.pkg.dev/stackpulse/public/ssh/command:SP-4011
+  - name: us-docker.pkg.dev/stackpulse/public/ssh/command
     id: process_stat_step
     env:
       COMMAND: ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -11
       USERNAME: '{{ $.params.username }}'
       HOSTNAME: '{{ $.params.hostname }}'
-      PORT: '{{ $.params.port }}'
       PRIVATE_KEY: '{{ secret $.params.sshKey }}'
-  - name: us-docker.pkg.dev/stackpulse/public/ssh/command:SP-4011
+  - name: us-docker.pkg.dev/stackpulse/public/ssh/command
     id: storage_step
     env:
       COMMAND: df -h
       USERNAME: '{{ $.params.username }}'
       HOSTNAME: '{{ $.params.hostname }}'
-      PORT: '{{ $.params.port }}'
       PRIVATE_KEY: '{{ secret $.params.sshKey }}'
-  - name: us-docker.pkg.dev/stackpulse/public/ssh/command:SP-4011
+  - name: us-docker.pkg.dev/stackpulse/public/ssh/command
     id: vmstat_step
     env:
       COMMAND: vmstat
       USERNAME: '{{ $.params.username }}'
       HOSTNAME: '{{ $.params.hostname }}'
-      PORT: '{{ $.params.port }}'
       PRIVATE_KEY: '{{ secret $.params.sshKey }}'
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
     id: send_ps_output
