@@ -53,7 +53,7 @@ steps:
     envFrom:
       integrationRef: "{{ $.params.slack_integration }}"
     env:
-      SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+      SP_REDIRECT_URL: {{ $.metadata.executionUrl }}
       HEADER_MESSAGE: Hello
       RECIPIENTS: "{{ $.params.recipient }}"
       QUESTION: "Delete job {{ $.params.job_name }}?"
