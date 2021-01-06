@@ -13,22 +13,19 @@ parameters:
   - name: zoomAPISecret
     type: secret
     description: Zoom API Secret.
-  - name: pagerDutyToken
-    type: secret
-    description: PagerDuty API Token.
-  - name: pagerDutyService
+  - name: opsGenieService
     type: var
-    description: The name of the PagerDuty service you would wish to page the on call for.
+    description: The name of the OpsGenie service you would wish to page the on call for.
   - name: slackIntegrationName
     type: integration
     description: Slack integration.
     options:
       integration_type: slack
-  - name: opsgenieIntegrationName
+  - name: opsGenieIntegrationName
     type: integration
     description: Opsgenie integration.
     options:
-      integration_type: opsgenie
+      integration_type: Opsgenie
   - name: opsgenieUseEUApi
     type: var
     description: set to true to use Opsgenie EU region.
@@ -88,9 +85,9 @@ steps:
     when: '{{ ieq $.slack_response "Yes" }}'
     env:
       USE_EU_API: "{{ $.params.opsgenieUseEUApi }}"
-      SERVICE_NAME: "{{ $.params.pagerDutyService }}"
+      SERVICE_NAME: "{{ $.params.opsGenieService }}"
       MESSAGE: "{{ $.event.Name | kebabcase }}-{{ $.event.ID | kebabcase }}"
       DESCRIPTION: "{{ $.event.Name | kebabcase }}-{{ $.event.ID | kebabcase }} created by StackPulse"
       PRIORITY: '{{ if ieq $.event.Severity "normal" }}P3{{ else if "high" }}P2{{ else }}P1{{ end }}'
     envFrom:
-      integrationRef: "{{ $.params.opsgenieIntegrationName }}"
+      integrationRef: "{{ $.params.opsGenieIntegrationName }}"
