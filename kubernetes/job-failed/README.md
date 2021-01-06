@@ -7,7 +7,7 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/kubernetes/job-failed/playbook.yaml)
 
-This playbook will help you extract the logs from a failed job and help you optionally delete it once you understand the root cause.
+This playbook extracts logs from a failed Kubernetes job and optionally allows to delete it.
 
 ## Your benefits
 
