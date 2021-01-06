@@ -46,7 +46,7 @@ steps:
           env:
             CONTENT: "{{ $.output }}"
             RECIPIENTS: "{{ $.params.recipient }}"
-            SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+           SP_REDIRECT_URL: {{ $.metadata.executionUrl }}
 
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
     id: Ask permission to delete
