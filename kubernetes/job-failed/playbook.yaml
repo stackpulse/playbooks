@@ -57,7 +57,7 @@ steps:
       HEADER_MESSAGE: Hello
       RECIPIENTS: "{{ $.params.recipient }}"
       QUESTION: "Delete job {{ $.params.job_name }}?"
-      RESPONSES_JSON: '{"No": "no", "Yes": "yes"}'
+      RESPONSES: "No, Yes"
       MESSAGE_TYPE: "BUTTONS_SELECT"
       TIMEOUT: "30m"
       DEFAULT_RESPONSE: "Yes"
