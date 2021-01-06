@@ -1,0 +1,81 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: ssh-diagnostics
+  description: This playbook fetch data regarding cpu usage, memory and storage for given machine
+parameters:
+  - name: username
+    type: var
+    description: username for remote access machine
+  - name: hostname
+    type: var
+    description: hostname for the remote machine
+  - name: port
+    type: var
+    description: ssh port
+  - name: sshKey
+    type: secret
+    description: private key access the remote machine via ssh
+  - name: SlackIntegration
+    type: integration
+    description: Slack integration name
+    options:
+      integration_type: slack
+  - name: slackChannel
+    type: var
+    description: Destination slack channel 
+steps:
+  - name: us-docker.pkg.dev/stackpulse/public/ssh/command:SP-4011
+    id: process_stat_step
+    env:
+      COMMAND: ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -11
+      USERNAME: '{{ $.params.username }}'
+      HOSTNAME: '{{ $.params.hostname }}'
+      PORT: '{{ $.params.port }}'
+      PRIVATE_KEY: '{{ secret $.params.sshKey }}'
+  - name: us-docker.pkg.dev/stackpulse/public/ssh/command:SP-4011
+    id: storage_step
+    env:
+      COMMAND: df -h
+      USERNAME: '{{ $.params.username }}'
+      HOSTNAME: '{{ $.params.hostname }}'
+      PORT: '{{ $.params.port }}'
+      PRIVATE_KEY: '{{ secret $.params.sshKey }}'
+  - name: us-docker.pkg.dev/stackpulse/public/ssh/command:SP-4011
+    id: vmstat_step
+    env:
+      COMMAND: vmstat
+      USERNAME: '{{ $.params.username }}'
+      HOSTNAME: '{{ $.params.hostname }}'
+      PORT: '{{ $.params.port }}'
+      PRIVATE_KEY: '{{ secret $.params.sshKey }}'
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: send_ps_output
+    env:
+      SP_REDIRECT_URL: '{{ $.metadata.executionUrl }}'
+      CONTENT: "{{ $.process_stat_step.output }}"
+      INITIAL_COMMENT: Information about a selection of the active proccess for the host {{ $.params.hostname }}
+      RECIPIENTS: "{{ $.params.slackChannel }}"
+      TITLE: ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -11
+    envFrom:
+      integrationRef: '{{ $.params.SlackIntegration }}'
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: send_df_output
+    env:
+      SP_REDIRECT_URL: '{{ $.metadata.executionUrl }}'
+      CONTENT: "{{ $.storage_step.output }}"
+      INITIAL_COMMENT: Information about machine storage devices {{ $.params.hostname }}
+      RECIPIENTS: "{{ $.params.slackChannel }}"
+      TITLE: df -h
+    envFrom:
+      integrationRef: '{{ $.params.SlackIntegration }}'
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: send_vmstat_output
+    env:
+      SP_REDIRECT_URL: '{{ $.metadata.executionUrl }}'
+      CONTENT: "{{ $.vmstat_step.output }}"
+      INITIAL_COMMENT: Information about processes, memory, paging, block IO, traps, and cpu activity for the host {{ $.params.hostname }}
+      RECIPIENTS: "{{ $.params.slackChannel }}"
+      TITLE: vmstat
+    envFrom:
+      integrationRef: '{{ $.params.SlackIntegration }}'
