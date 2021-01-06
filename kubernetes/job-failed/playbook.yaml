@@ -48,7 +48,7 @@ steps:
             RECIPIENTS: "{{ $.params.recipient }}"
             SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
 
-  - name: gcr.io/stackpulse/steps/slack/send_interactive_message
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
     id: Ask permission to delete
     envFrom:
       integrationRef: "{{ $.params.slack_integration }}"
