@@ -6,12 +6,12 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/local-diagnostics/playbook.yaml)
 
-This playbook queries given host memory, storage and cpu usage using well know linux commands  - df, ps and vmstat.
+This playbook queries utilization of CPU, memory and storage for a given host and sends the output to Slack recipients of choice.
 It then sends that output to Slack recipients of your choice as a snippet.
 
 ## Your benefits
 
-- Automatically retrieve local information regarding your machine with common linux commands - df, ps and vmstat.
+- Triage production hosts without having to provide multiple people direct access to production.
 
 ## Your experience
 
