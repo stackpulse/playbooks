@@ -54,7 +54,7 @@ steps:
       integrationRef: "{{ $.params.SlackIntegrationName }}"
 
   # Slow Logs
-  - name: us-docker.pkg.dev/stackpulse/public/redis/slow-log-go
+  - name: us-docker.pkg.dev/stackpulse/public/redis/slow-log
     id: redis-slow-log
     runner: "{{ $.params.runnerName }}"
     env:
@@ -79,7 +79,7 @@ steps:
       integrationRef: "{{ $.params.SlackIntegrationName }}"
 
   # Clients
-  - name: us-docker.pkg.dev/stackpulse/public/redis/client-list-go
+  - name: us-docker.pkg.dev/stackpulse/public/redis/client-list
     id: redis-client-list
     runner: "{{ $.params.runnerName }}"
     env:
