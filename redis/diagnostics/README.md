@@ -9,10 +9,11 @@
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/redis/diagnostics/playbook.yaml)
 
 This playbook queries a Redis host and retrieves multiple diagnostics:
-* General Info - Displays curated data that acts as the first line of triage. for example, the amount of connected clients, used memory, and more.
-* Slow Logs - Details the last N (defaults to 10) slowest queries executed in your Redis instance.
-* Client List - Allows you to quickly understand who use (or abuse) your Redis instance and how.
-* Big Keys - Retrieves statistics about keys size in your Instance. large keys can be very costly in terms of memory usage.
+
+* General Info: Displays curated data that acts as the first line of triage. for example, the amount of connected clients, used memory, and more.
+* Slow Logs: Details the last N (defaults to 10) slowest queries executed in your Redis instance.
+* Client List: Allows you to quickly understand who use (or abuse) your Redis instance and how.
+* Big Keys: Retrieves statistics about keys size in your Instance. large keys can be very costly in terms of memory usage.
 
 At the end of each step, its output is sent to Slack recipients of your choice.
 
