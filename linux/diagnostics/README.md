@@ -7,7 +7,6 @@
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/local-diagnostics/playbook.yaml)
 
 This playbook queries utilization of CPU, memory and storage for a given host and sends the output to Slack recipients of choice.
-It then sends that output to Slack recipients of your choice as a snippet.
 
 ## Your benefits
 
@@ -15,11 +14,11 @@ It then sends that output to Slack recipients of your choice as a snippet.
 
 ## Your experience
 
-![local-diagnostics message](../../images/ssh.png)
+![local-diagnostics message](../../images/diagnostics_output.png)
 
 ## How to get started
 
-[![Import to StackPulse](../../images/diagnostics_output.png)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/local-diagnostics/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/linux/diagnostics/playbook.yaml)
 
 Not a Stackpulse user? Follow these steps:
 
