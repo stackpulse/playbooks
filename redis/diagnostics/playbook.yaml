@@ -90,8 +90,8 @@ steps:
     id: tabulate-client-list
     env:
       INPUT: "{{ toJson $.'redis-client-list'.output }}"
-      HEADERS: '{"id":"id", "addr":"Adress", "age":"Age", "cmd":"Last Cmd", "events":"Events", "idle":"Idle Time", "qbuf":"Queries Pending", "tot-mem":"Total Memory"}'
-      INCLUDE_FILTER: '["id", "addr", "age", "cmd", "events", "idle",  "qbuf",   "tot-mem"]'
+      HEADERS: '{"id":"id", "addr":"Adress", "age":"Age", "cmd":"Last Cmd", "flags":"Flags", "idle":"Idle Time", "qbuf":"Queries Pending", "tot-mem":"Total Memory"}'
+      INCLUDE_FILTER: '["id", "addr", "age", "cmd", "flags", "idle",  "qbuf",   "tot-mem"]'
   
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
     id: slack-send-client-list
