@@ -1,0 +1,126 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: redis-diagnostics
+  description: Playbook automating active data enrichment for REDIS incidents
+parameters:
+  # StackPulse SPD
+  - name: runnerName
+    type: var
+    description: SPD runner name to run the Redis commands on
+
+  # Redis
+  - name: RedisPassword
+    type: secret
+    description: Destination redis password
+  - name: RedisIp
+    type: var
+    description: redis host
+
+  #Slack
+  - name: SlackRecipients
+    type: var
+    description: slack recipients
+  - name: SlackIntegrationName
+    type: integration
+    description: Slack integration.
+    options:
+      integration_type: slack
+
+steps:
+  # General info summary
+  - name: us-docker.pkg.dev/stackpulse/public/redis/info
+    id: redis-info
+    runner: "{{ $.params.runnerName }}"
+    env:
+      REDIS_PASSWORD: "{{ secret $.params.RedisPassword }}"
+      REDIS_IP: "{{ $.params.RedisIp }}"
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: slack-send-redis-info
+    env:
+      INITIAL_COMMENT: "Redis general information summary (host: {{ $.params.RedisIp }})"
+      TITLE: "redis-cli info"
+      CONTENT:      "Connected Clients: {{ $.'redis-info'.Clients.connected_clients }}\n
+                    Blocked Clients: {{ $.'redis-info'.Clients.blocked_clients }}\n
+                    Used Memory: {{ $.'redis-info'.Memory.used_memory_human }}\n
+                    Peak Used Memory: {{ $.'redis-info'.Memory.used_memory_peak_human }}\n
+                    Replication Backlog Size: {{ $.'redis-info'.Replication.repl_backlog_size
+                    }}\n
+                    Server Uptime (Seconds): {{ $.'redis-info'.Server.uptime_in_seconds }}
+                    "
+      SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+      RECIPIENTS: "{{ $.params.SlackRecipients }}"
+    envFrom:
+      integrationRef: "{{ $.params.SlackIntegrationName }}"
+
+  # Slow Logs
+  - name: us-docker.pkg.dev/stackpulse/public/redis/slow-log-go:SP-4160-client-list-go
+    id: redis-slow-log
+    runner: "{{ $.params.runnerName }}"
+    env:
+      REDIS_PASSWORD: "{{ secret $.params.RedisPassword }}"
+      REDIS_IP: "{{ $.params.RedisIp }}"
+
+  - name: us-docker.pkg.dev/stackpulse/public/parsers/tabulate
+    id: tabulate-slow-log
+    env:
+      INPUT: "{{ toJson $.'redis-slow-log'.output }}"
+      HEADERS: "keys"
+  
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: slack-send-slow-logs
+    env:
+      INITIAL_COMMENT: "Slowest Redis queries recently executed (host: {{ $.params.RedisIp }})"
+      TITLE: "redis-cli --slowlog"
+      CONTENT: "{{ $.'tabulate-slow-log'.tabulate_output }}"
+      SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+      RECIPIENTS: "{{ $.params.SlackRecipients }}"
+    envFrom:
+      integrationRef: "{{ $.params.SlackIntegrationName }}"
+
+  # Clients
+  - name: us-docker.pkg.dev/stackpulse/public/redis/client-list-go:SP-4160-client-list-go
+    id: redis-client-list
+    runner: "{{ $.params.runnerName }}"
+    env:
+      REDIS_PASSWORD: "{{ secret $.params.RedisPassword }}"
+      REDIS_IP: "{{ $.params.RedisIp }}"
+
+  - name: us-docker.pkg.dev/stackpulse/public/parsers/tabulate
+    id: tabulate-client-list
+    env:
+      INPUT: "{{ toJson $.'redis-client-list'.output }}"
+      HEADERS: '{"id":"id", "addr":"Adress", "age":"Age", "cmd":"Last Cmd", "events":"Events", "idle":"Idle Time", "qbuf":"Queries Pending", "tot-mem":"Total Memory"}'
+      INCLUDE_FILTER: '["id", "addr", "age", "cmd", "events", "idle",  "qbuf",   "tot-mem"]'
+  
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: slack-send-client-list
+    env:
+      INITIAL_COMMENT: "List of your Redis instance users and their usage data ({{ $.params.RedisIp }})"
+      TITLE: redis-cli client list
+      CONTENT: "{{ $.'tabulate-client-list'.tabulate_output }}"
+      SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+      RECIPIENTS: "{{ $.params.SlackRecipients }}"
+    envFrom:
+      integrationRef: "{{ $.params.SlackIntegrationName }}"
+
+  # Big Keys
+  - name: us-docker.pkg.dev/stackpulse/public/redis/bigkeys
+    id: redis_query_big_keys
+    env:
+      REDIS_IP: '{{ $.params.RedisIp }}'
+      REDIS_PASSWORD: '{{ secret $.params.RedisPassword }}'
+    runner: '{{ $.params.runnerName }}'
+    output_parser:
+      name: us-docker.pkg.dev/stackpulse/public/raw-output-parser
+
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: slack-send-big-keys
+    env:
+      SP_REDIRECT_URL: '{{ $.metadata.executionUrl }}'
+      CONTENT: "{{ $.'redis_query_big_keys'.output }}"
+      INITIAL_COMMENT: 'Redis long keys statistics (host: {{ $.params.RedisIp }})'
+      RECIPIENTS: '{{ $.params.SlackRecipients }}'
+      TITLE: redis-cli --bigkeys
+    envFrom:
+      integrationRef: '{{ $.params.SlackIntegrationName }}'
