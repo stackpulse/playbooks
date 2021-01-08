@@ -171,19 +171,42 @@ Playbooks in this section help automate incident management and communication fl
 <table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
-      <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room-pagerduty">
       <img src="images/stackpulse.png"/>
       </a>
     </td>
     <td>
-      <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room"><b>Create Incident War-room (Slack, Zoom, PagerDuty)</b></a><br><br>Playbook that creates Incident War Room in Slack (and/or Video Conferencing software), invites the relevant participants based on incident details (and/or on on-call rotation schedules).<br><br>
+      <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room-pagerduty"><b>Create Incident War-room (Slack, Zoom, PagerDuty)</b></a><br><br>Playbook that creates Incident War Room in Slack (and/or Video Conferencing software), invites the relevant participants based on incident details (and/or on on-call rotation schedules).<br><br>
         <div style="padding-top:1px">
             <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
             <img src="https://img.shields.io/static/v1?label=uses&message=Zoom&style=flat&logo=zoom&color=2D8CFF" alt="zoom">
             <img src="https://img.shields.io/static/v1?label=uses&message=PagerDuty&style=flat&logo=pagerduty&color=47BA04" alt="pagerduty">
         </div>
         <div style="margin-top:15px">
-            <a href="https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room/playbook.yaml" target="_blank" style="vertical-align:middle"><img src="images/open_in_stackpulse.svg" alt="import_in_stackpulse" width="130"></a>
+            <a href="https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room-pagerduty/playbook.yaml" target="_blank" style="vertical-align:middle"><img src="images/open_in_stackpulse.svg" alt="import_in_stackpulse" width="130"></a>
+    </div>
+  </td>
+  </tr>
+</table>
+
+<br>
+
+<table border=2 border-style=outset>
+  <tr>
+    <td border=0 width="110">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room-opsgenie">
+      <img src="images/stackpulse.png"/>
+      </a>
+    </td>
+    <td>
+      <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room-opsgenie"><b>Create Incident War-room (Slack, Zoom, OpsGenie)</b></a><br><br>Playbook that creates Incident War Room in Slack (and/or Video Conferencing software), invites the relevant participants based on incident details (and/or on on-call rotation schedules).<br><br>
+        <div style="padding-top:1px">
+            <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
+            <img src="https://img.shields.io/static/v1?label=uses&message=Zoom&style=flat&logo=zoom&color=2D8CFF" alt="zoom">
+            <img src="https://img.shields.io/static/v1?label=uses&message=OpsGenie&style=flat&logo=opsgenie&color=0052CC" alt="opsgenie">
+        </div>
+        <div style="margin-top:15px">
+            <a href="https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room-opsgenie/playbook.yaml" target="_blank" style="vertical-align:middle"><img src="images/open_in_stackpulse.svg" alt="import_in_stackpulse" width="130"></a>
     </div>
   </td>
   </tr>
