@@ -142,7 +142,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
 <table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
-      <a href="https://github.com/stackpulse/playbooks/tree/master/redis/get-big-keys">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/linux/diagnostics">
         <img src="images/ssh.png"/>
       </a>
     </td>
