@@ -19,7 +19,7 @@ At the end of each step, its output is sent to Slack recipients of your choice.
 
 ## Your benefits
 
-* Automatically retrieve an overview of your Redis instance diagnostics.
+* Provides an overall Redis instance diagnostics.
 
 ## Your experience
 
