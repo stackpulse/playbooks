@@ -10,10 +10,10 @@
 
 This playbook queries a Redis host's general and specific diagnostics:
 
-* General Info: Basic triage such as number of connected clients, memory consumption, server uptime, etc.
+* General Info: Basic triage such as # of connected clients, memory utilization, memory peaked utilization, server uptime.
 * Slow Logs: Last X (default: 10) slowest queries executed.
-* Client List: Allows you to quickly understand who use (or abuse) your Redis instance. The list of clients is ordered by id and include name, adress and flags, as well as last command executed by them, total memory they consumed, number of pending queries, idle time and more.
-* Big Keys: Retrieves statistics about keys size in your Instance, and their memory consumption.
+* Client List: Lists clients with their respective memory utilization, # of pending queries, idle time and age.
+* Big Keys: Retrieves keys statistics and memory utilization by data type.
 
 At the end of each step, its output is sent to Slack recipients of your choice.
 
