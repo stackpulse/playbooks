@@ -41,14 +41,13 @@ steps:
     env:
       INITIAL_COMMENT: "Redis general information summary (host: {{ $.params.RedisIp }})"
       TITLE: "redis-cli info"
-      CONTENT: " Connected Clients: {{ $.'redis-info'.Clients.connected_clients }}\n
-              Blocked Clients: {{ $.'redis-info'.Clients.blocked_clients }}\n
-              Used Memory: {{ $.'redis-info'.Memory.used_memory_human }}\n
-              Peak Used Memory: {{ $.'redis-info'.Memory.used_memory_peak_human }}\n
-              Replication Backlog Size: {{ $.'redis-info'.Replication.repl_backlog_size
-              }}\n
+      CONTENT: |-
+              Connected Clients: {{ $.'redis-info'.Clients.connected_clients }}
+              Blocked Clients: {{ $.'redis-info'.Clients.blocked_clients }}
+              Used Memory: {{ $.'redis-info'.Memory.used_memory_human }}
+              Peak Used Memory: {{ $.'redis-info'.Memory.used_memory_peak_human }}
+              Replication Backlog Size: {{ $.'redis-info'.Replication.repl_backlog_size }}
               Server Uptime (Seconds): {{ $.'redis-info'.Server.uptime_in_seconds }}
-              "
       SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
       RECIPIENTS: "{{ $.params.SlackRecipients }}"
     envFrom:
