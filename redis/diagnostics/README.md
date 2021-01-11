@@ -8,9 +8,9 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/redis/diagnostics/playbook.yaml)
 
-This playbook queries a Redis host's general and specific diagnostics:
+This playbook queries a Redis cluster's general and specific diagnostics:
 
-* General Info: Basic triage such as # of connected clients, memory utilization, memory peaked utilization, server uptime.
+* General Info: Curated basic info such as # of connected clients, memory utilization, memory peaked utilization, server uptime.
 * Slow Logs: Last X (default: 10) slowest queries executed.
 * Client List: Lists clients with their respective memory utilization, # of pending queries, idle time and age.
 * Big Keys: Retrieves keys statistics and memory utilization by data type.
@@ -19,7 +19,7 @@ At the end of each step, its output is sent to Slack recipients of your choice.
 
 ## Your benefits
 
-* Provides an overall Redis instance diagnostics.
+* Provides a set of Redis cluster diagnostics that focus on common factors to high memory consumption and performance issues.
 
 ## Your experience
 

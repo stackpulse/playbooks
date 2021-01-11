@@ -28,13 +28,14 @@ parameters:
       integration_type: slack
 
 steps:
-  # General info summary
+  # Retrieve and send general info summary
   - name: us-docker.pkg.dev/stackpulse/public/redis/info
     id: redis-info
     runner: "{{ $.params.runnerName }}"
     env:
       REDIS_PASSWORD: "{{ secret $.params.RedisPassword }}"
       REDIS_IP: "{{ $.params.RedisIp }}"
+  
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
     id: slack-send-redis-info
     env:
@@ -53,7 +54,7 @@ steps:
     envFrom:
       integrationRef: "{{ $.params.SlackIntegrationName }}"
 
-  # Slow Logs
+  # Retrieve, format and send slow Logs
   - name: us-docker.pkg.dev/stackpulse/public/redis/slowlog
     id: redis-slow-log
     runner: "{{ $.params.runnerName }}"
@@ -78,7 +79,7 @@ steps:
     envFrom:
       integrationRef: "{{ $.params.SlackIntegrationName }}"
 
-  # Clients
+  # Retrieve, format and send client list
   - name: us-docker.pkg.dev/stackpulse/public/redis/client-list
     id: redis-client-list
     runner: "{{ $.params.runnerName }}"
@@ -96,7 +97,7 @@ steps:
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
     id: slack-send-client-list
     env:
-      INITIAL_COMMENT: "List of your Redis instance users and their usage data ({{ $.params.RedisIp }})"
+      INITIAL_COMMENT: "List of your Redis instance users and their usage data (host: {{ $.params.RedisIp }})"
       TITLE: redis-cli client list
       CONTENT: "{{ $.'tabulate-client-list'.tabulate_output }}"
       SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
@@ -104,7 +105,7 @@ steps:
     envFrom:
       integrationRef: "{{ $.params.SlackIntegrationName }}"
 
-  # Big Keys
+  # Retrieve, parse and send big keys
   - name: us-docker.pkg.dev/stackpulse/public/redis/bigkeys
     id: redis-big-keys
     env:
