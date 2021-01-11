@@ -19,7 +19,7 @@ At the end of each step, its output is sent to Slack recipients of your choice.
 
 ## Your benefits
 
-* Provides a set of Redis cluster diagnostics that focus on common factors to high memory consumption and performance issues.
+* Provides a set of Redis cluster diagnostics that focus on common factors of high memory consumption and performance issues.
 
 ## Your experience
 
