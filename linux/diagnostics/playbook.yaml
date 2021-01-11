@@ -20,29 +20,23 @@ parameters:
       integration_type: slack
   - name: slackChannel
     type: var
-    description: Destination slack channel 
+    description: Destination slack channel
+  - name: runnerName
+    type: var
+    description: "SPD runner name which has ssh access to the destination machine"
 steps:
+
+  # Retrieve top running processes, sorted by memory consumption
   - name: us-docker.pkg.dev/stackpulse/public/ssh/command
     id: process_stat_step
+    runner: '{{ $.params.runnerName }}'
     env:
       COMMAND: ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -11
       USERNAME: '{{ $.params.username }}'
       HOSTNAME: '{{ $.params.hostname }}'
       PRIVATE_KEY: '{{ secret $.params.sshKey }}'
-  - name: us-docker.pkg.dev/stackpulse/public/ssh/command
-    id: storage_step
-    env:
-      COMMAND: df -h
-      USERNAME: '{{ $.params.username }}'
-      HOSTNAME: '{{ $.params.hostname }}'
-      PRIVATE_KEY: '{{ secret $.params.sshKey }}'
-  - name: us-docker.pkg.dev/stackpulse/public/ssh/command
-    id: vmstat_step
-    env:
-      COMMAND: vmstat
-      USERNAME: '{{ $.params.username }}'
-      HOSTNAME: '{{ $.params.hostname }}'
-      PRIVATE_KEY: '{{ secret $.params.sshKey }}'
+  
+  # Send snippet message of the top memory consuming processes to the slack channel
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
     id: send_ps_output
     env:
@@ -53,6 +47,18 @@ steps:
       TITLE: ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -11
     envFrom:
       integrationRef: '{{ $.params.SlackIntegration }}'
+
+  # Retrieve data about storage partions
+  - name: us-docker.pkg.dev/stackpulse/public/ssh/command
+    id: storage_step
+    runner: '{{ $.params.runnerName }}'
+    env:
+      COMMAND: df -h
+      USERNAME: '{{ $.params.username }}'
+      HOSTNAME: '{{ $.params.hostname }}'
+      PRIVATE_KEY: '{{ secret $.params.sshKey }}'
+      
+  # Send snippet message of the data about storage partions to the slack channel
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
     id: send_df_output
     env:
@@ -63,6 +69,18 @@ steps:
       TITLE: df -h
     envFrom:
       integrationRef: '{{ $.params.SlackIntegration }}'
+
+  # Retrieve virtual memory statistics data
+  - name: us-docker.pkg.dev/stackpulse/public/ssh/command
+    id: vmstat_step
+    runner: '{{ $.params.runnerName }}'
+    env:
+      COMMAND: vmstat
+      USERNAME: '{{ $.params.username }}'
+      HOSTNAME: '{{ $.params.hostname }}'
+      PRIVATE_KEY: '{{ secret $.params.sshKey }}'
+
+  # Send snippet message of virtual memory statistics data to the slack channel
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
     id: send_vmstat_output
     env:
