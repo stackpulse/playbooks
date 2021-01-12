@@ -166,7 +166,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
   <tr>
     <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/linux/diagnostics">
-        <img src="images/ssh.png"/>
+        <img src="images/ssh.svg"/>
       </a>
     </td>
     <td>
