@@ -142,6 +142,29 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
 <table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/redis/diagnostics">
+        <img src="images/redis.svg"/>
+      </a>
+    </td>
+    <td>
+      <a href="https://github.com/stackpulse/playbooks/tree/master/redis/diagnostics"><b>Redis Diagnostics</b></a><br><br>
+      This playbook collects Redis cluster diagnostics that focus on common factors to high memory consumption and performance issues. It then sends that output via Slack.<br><br>
+    <div style="padding-top:1px">
+        <img src="https://img.shields.io/static/v1?label=service&message=Redis&style=flat&logo=Redis&color=A41E11" alt="service">
+        <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
+    </div>
+    <div style="margin-top:15px">
+        <a href="https://img.shields.io/badge/uses-ssh-red" target="_blank" style="vertical-align:middle"><img src="images/open_in_stackpulse.svg" alt="import_in_stackpulse" width="130"></a>
+    </div>
+   </td>
+  </tr>
+</table>
+
+<br>
+
+<table border=2 border-style=outset>
+  <tr>
+    <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/linux/diagnostics">
         <img src="images/ssh.png"/>
       </a>
