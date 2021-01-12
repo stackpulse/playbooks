@@ -8,7 +8,7 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/redis/diagnostics/playbook.yaml)
 
-This playbook queries a Redis cluster's general and specific diagnostics:
+This playbook performs diagnostic operations on a Redis cluster and sends them via Slack:
 
 * General Info: Curated basic info such as # of connected clients, memory utilization, memory peaked utilization, server uptime.
 * Slow Logs: Last X (default: 10) slowest queries executed.
