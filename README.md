@@ -51,7 +51,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
       <img src="https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png"/>
       </a>
     </td>
-    <td>
+    <td border=0 width="837">
       <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/job-failed"><b>Kubernetes Job Failed</b></a><br><br>
       This playbook extracts logs from a failed Kubernetes job and optionally allows to delete it.
      <br><br>
