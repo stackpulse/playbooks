@@ -7,12 +7,11 @@ parameters:
     type: var
     description: "The name of the channel you would like to notify about the incident
       (without a #)."
-  - name: zoomAPIKey
-    type: secret
-    description: Zoom API Key.
-  - name: zoomAPISecret
-    type: secret
-    description: Zoom API Secret.
+  - name: zoomIntegrationName
+    type: integration
+    description: Zoom integration.
+    options:
+      integration_type: zoom
   - name: opsGenieService
     type: var
     description: The name of the OpsGenie service you would wish to page the on call for.
@@ -25,7 +24,7 @@ parameters:
     type: integration
     description: Opsgenie integration.
     options:
-      integration_type: Opsgenie
+      integration_type: opsgenie
   - name: opsgenieUseEUApi
     type: var
     description: set to true to use Opsgenie EU region.
@@ -35,8 +34,8 @@ steps:
     env:
       HOST_EMAIL: "{{ $.event.Reporter }}"
       MEETING_TOPIC: "StackPulse War Room for Incident {{ $.event.Name }} ({{ $.event.ID }})"
-      ZOOM_API_KEY: '{{ secret $.params.zoomAPIKey }}'
-      ZOOM_API_SECRET: '{{ secret $.params.zoomAPISecret }}'
+    envFrom:
+      integrationRef: "{{ $.params.zoomIntegrationName }}"
   - name: us-docker.pkg.dev/stackpulse/public/slack/channel/create
     id: slack_create_war_room_channel
     env:
