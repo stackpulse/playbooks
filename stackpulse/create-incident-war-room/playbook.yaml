@@ -5,13 +5,14 @@ metadata:
 parameters:
   - name: "notificationChannel"
     type: var
-    description: "The name of the channel you would like to notify about the incident (without a #)."
+    description: "The name of the channel or user you would like to notify about the incident (channel should start with #)."
   - name: "slackIntegrationName"
     type: integration
     description: "Slack integration."
     options:
       integration_type: slack
 steps:
+# Creates war-room channel
 - name: us-docker.pkg.dev/stackpulse/public/slack/channel/create
   id: slack_create_war_room_channel
   env:
@@ -21,6 +22,8 @@ steps:
     USERS: '{{ $.event.Reporter }}'
   envFrom:
     integrationRef: '{{ $.params.slackIntegrationName }}'
+
+# Attach war-room channel to StackPulse incident
 - name: us-docker.pkg.dev/stackpulse/public/stackpulse/incident/update
   id: attach_war_room_channel_to_incident
   env:
@@ -28,6 +31,8 @@ steps:
     SLACK_WAR_ROOM_NAME: '{{ $.channel_name }}'
   envFrom:
     integrationRef: '{{ $.params.slackIntegrationName }}'
+
+# send message in notification channel about creation of war-room
 - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
   id: slack_alert_notification_channel
   env:
@@ -36,6 +41,8 @@ steps:
     RECIPIENTS: "{{ $.params.notificationChannel }}"
   envFrom:
     integrationRef: '{{ $.params.slackIntegrationName }}'
+
+# send message in war-room with incident details
 - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
   id: slack_alert_war_room_channel
   env:
