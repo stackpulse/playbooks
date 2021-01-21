@@ -5,7 +5,7 @@
 ![uses-ssh](https://img.shields.io/badge/uses-ssh-red)
 ![uses-slack](https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B)
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/linux/diagnostics/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/linux/diagnostics/playbook.yaml)
 
 This playbook queries utilization of CPU, memory and storage for a given host and sends the output to Slack recipients of choice.
 
@@ -21,7 +21,7 @@ This playbook queries utilization of CPU, memory and storage for a given host an
 
 ## How to get started
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/linux/diagnostics/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/linux/diagnostics/playbook.yaml)
 
 Not a Stackpulse user? Follow these steps:
 

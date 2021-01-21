@@ -4,7 +4,7 @@
 
 ![uses-slack](https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B)
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/stackpulse/archive-incident-war-room/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/stackpulse/archive-incident-war-room/playbook.yaml)
 
 This playbook interactively asks the incident commander whether to archive the incident's war room channel.
 The default behavior after a timeout of five minuets will be to archive the channel.
@@ -20,7 +20,7 @@ This playbook should be triggered by an incident update event with a closed stat
 
 ## How to get started
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/stackpulse/archive-incident-war-room/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/stackpulse/archive-incident-war-room/playbook.yaml)
 
 Not a Stackpulse user? Follow these steps:
 
