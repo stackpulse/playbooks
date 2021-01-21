@@ -7,7 +7,7 @@
 ![service](https://img.shields.io/static/v1?label=service&message=PostgresSQL&style=flat&logo=PostgreSQL&color=336791)
 ![uses-slack](https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B)
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/postgres/long-running-sessions/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/postgres/long-running-sessions/playbook.yaml)
 
 This playbook collects all non-idle long running sessions from PostgresSQL instance and send it to Slack recipients.
 
@@ -24,7 +24,7 @@ This playbook collects all non-idle long running sessions from PostgresSQL insta
 
 ## How to get started
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/postgres/long-running-sessions/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/postgres/long-running-sessions/playbook.yaml)
 
 Not a Stackpulse user? Follow these steps:
 

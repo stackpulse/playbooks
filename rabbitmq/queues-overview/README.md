@@ -6,7 +6,7 @@
 ![service](https://img.shields.io/static/v1?label=service&message=RabbitMQ&style=flat&logo=RabbitMQ&color=FF6600)
 ![uses-slack](https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B)
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/rabbitmq/queues-overview/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/rabbitmq/queues-overview/playbook.yaml)
 
 This playbook collects an overview about RabbitMQ instance and classify it's most consumption queues by: `messages`, `unacknowledged messages`, `messages bytes` and `memory` and send it to Slack recipients.
 
@@ -25,7 +25,7 @@ This playbook collects an overview about RabbitMQ instance and classify it's mos
 
 ## How to get started
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/rabbitmq/queues-overview/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/rabbitmq/queues-overview/playbook.yaml)
 
 Not a Stackpulse user? Follow these steps:
 

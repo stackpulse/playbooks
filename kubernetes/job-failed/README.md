@@ -5,7 +5,7 @@
 ![env](https://img.shields.io/static/v1?label=env&message=Kubernetes&style=flat&logo=Kubernetes&color=326CE5)
 ![uses-slack](https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B)
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/kubernetes/job-failed/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/job-failed/playbook.yaml)
 
 This playbook extracts logs from a failed Kubernetes job and optionally allows to delete it.
 
@@ -21,7 +21,7 @@ This playbook extracts logs from a failed Kubernetes job and optionally allows t
 
 ## How to get started
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/kubernetes/job-restarting/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/job-restarting/playbook.yaml)
 
 Not a Stackpulse user? Follow these steps:
 

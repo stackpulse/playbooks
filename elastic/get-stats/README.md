@@ -5,7 +5,7 @@
 ![service](https://img.shields.io/static/v1?label=service&message=Elasticsearch&style=flat&logo=Elasticsearch&color=00BFB3)
 ![uses-slack](https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B)
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/elastic/get-stats/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/elastic/get-stats/playbook.yaml)
 
 This playbook collects info, stats and metrics from an Elasticsearch cluster and sends it to Slack.
 
@@ -22,7 +22,7 @@ This playbook collects info, stats and metrics from an Elasticsearch cluster and
 
 ## How to get started
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/elastic/get-stats/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/elastic/get-stats/playbook.yaml)
 
 Not a Stackpulse user? Follow these steps:
 

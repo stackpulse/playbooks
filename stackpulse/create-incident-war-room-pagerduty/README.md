@@ -6,7 +6,7 @@
 ![uses-zoom](https://img.shields.io/static/v1?label=uses&message=Zoom&style=flat&logo=zoom&color=2D8CFF)
 ![uses-pagerduty](https://img.shields.io/static/v1?label=uses&message=PagerDuty&style=flat&logo=pagerduty&color=47BA04)
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room-pagerduty/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room-pagerduty/playbook.yaml)
 
 This playbook opens a new Slack channel to be used as a war room for a new incident.
 It additionally creates a Zoom call and pages the current on caller on PagerDuty at the time of the incident.
@@ -25,7 +25,7 @@ This playbook should be set up to be triggered by an incident creation event.
 
 ## How to get started
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room-pagerduty/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room-pagerduty/playbook.yaml)
 
 Not a Stackpulse user? Follow these steps:
 
