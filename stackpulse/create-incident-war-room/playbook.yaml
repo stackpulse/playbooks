@@ -6,6 +6,10 @@ parameters:
   - name: "notificationChannel"
     type: var
     description: "The name of the channel or user you would like to notify about the incident (channel should start with #)."
+  - name: "invitees"
+    type: var
+    description: "The emails of the users that will be invited to the channel (by default, only the incident reporter)."
+    defaultValue: '{{ $.event.Reporter }}'
   - name: "slackIntegrationName"
     type: integration
     description: "Slack integration."
@@ -19,7 +23,7 @@ steps:
     CHANNEL_NAME: "incident {{ $.event.Name }} {{$.event.ID }}"
     PURPOSE: '{{ $.event.Description }}'
     TOPIC: "StackPulse War Room Channel for Incident {{ $.event.Name }} ({{ $.event.ID }})"
-    USERS: '{{ $.event.Reporter }}'
+    USERS: '{{ $.params.invitees }}'
   envFrom:
     integrationRef: '{{ $.params.slackIntegrationName }}'
 
