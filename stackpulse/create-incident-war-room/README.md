@@ -10,8 +10,7 @@ This playbook opens a new Slack channel to be used as a war room for a new incid
 
 ## Your benefits
 
-- Coordinate all parties involved in an incident faster with on demand war room channel and Zoom meeting creation.
-- Seamlessly page your on caller with the creation of a StackPulse incident.
+- Coordinate all parties involved in an incident faster with on demand war room channel.
 
 ## Your experience
 
@@ -19,7 +18,7 @@ This playbook opens a new Slack channel to be used as a war room for a new incid
 
 ## How to get started
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room/playbook.yaml)
 
 Not a Stackpulse user? Follow these steps:
 
