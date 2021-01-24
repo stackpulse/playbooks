@@ -32,7 +32,7 @@ steps:
   envFrom:
     integrationRef: '{{ $.params.slackIntegrationName }}'
 
-# send message in notification channel about creation of war-room
+# Send message in notification channel about creation of war-room
 - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
   id: slack_alert_notification_channel
   env:
@@ -42,7 +42,7 @@ steps:
   envFrom:
     integrationRef: '{{ $.params.slackIntegrationName }}'
 
-# send message in war-room with incident details
+# Send message in war-room with incident details
 - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
   id: slack_alert_war_room_channel
   env:
