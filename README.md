@@ -224,7 +224,7 @@ Playbooks in this section help automate incident management and communication fl
       </a>
     </td>
     <td>
-      <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room"><b>Create Incident War-room (Slack)</b></a><br><br>Playbook that creates Incident War Room in Slack and invites the relevant participants based on incident details.<br><br>
+      <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room"><b>Create Incident War-room (Slack)</b></a><br><br>This playbook creates a Slack Incident War Room and invites participants to it.<br><br>
         <div style="padding-top:1px">
             <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
         </div>

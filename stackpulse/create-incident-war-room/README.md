@@ -10,7 +10,8 @@ This playbook opens a new Slack channel to be used as a war room for a new incid
 
 ## Your benefits
 
-- Coordinate all parties involved in an incident faster with on demand war room channel.
+- Coordinate all incident stakeholders faster with on demand war room channel.
+- Configurable invitees list allows to invite relevant participants per use case.
 
 ## Your experience
 
