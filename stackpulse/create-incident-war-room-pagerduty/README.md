@@ -14,7 +14,8 @@ This playbook should be set up to be triggered by an incident creation event.
 
 ## Your benefits
 
-- Coordinate all parties involved in an incident faster with on demand war room channel and Zoom meeting creation.
+- Coordinate all incident stakeholders faster with on demand war room channel and Zoom meeting creation.
+- Configurable invitees list allows to invite relevant participants per use case.
 - Seamlessly page your on caller with the creation of a StackPulse incident.
 
 ## Your experience
