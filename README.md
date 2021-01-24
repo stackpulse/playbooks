@@ -291,7 +291,7 @@ Playbooks in this section help automate incident management and communication fl
       </a>
     </td>
     <td>
-      <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/archive-incident-war-room"><b>Archive Incident War-room (Slack)</b></a><br><br>Playbook that runs upon incident resolution and asks the incident commander whether to archive the Slack War-room that belonged to the incident.<br><br>
+      <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/archive-incident-war-room"><b>Archive Incident War Room (Slack)</b></a><br><br>Playbook that runs upon incident resolution and asks the incident commander whether to archive the Slack War-room that belonged to the incident.<br><br>
         <div style="padding-top:1px">
             <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
         </div>
