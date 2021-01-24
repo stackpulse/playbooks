@@ -219,6 +219,27 @@ Playbooks in this section help automate incident management and communication fl
 <table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room">
+      <img src="images/stackpulse.png"/>
+      </a>
+    </td>
+    <td>
+      <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room"><b>Create Incident War-room (Slack)</b></a><br><br>This playbook creates a Slack Incident War Room and invites participants to it.<br><br>
+        <div style="padding-top:1px">
+            <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
+        </div>
+        <div style="margin-top:15px">
+            <a href="https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room/playbook.yaml" target="_blank" style="vertical-align:middle"><img src="images/open_in_stackpulse.svg" alt="import_in_stackpulse" width="130"></a>
+    </div>
+  </td>
+  </tr>
+</table>
+
+<br>
+
+<table border=2 border-style=outset>
+  <tr>
+    <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room-pagerduty">
       <img src="images/stackpulse.png"/>
       </a>

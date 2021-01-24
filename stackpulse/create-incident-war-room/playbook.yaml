@@ -1,0 +1,57 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: create-incident-war-room
+parameters:
+  - name: "notificationChannel"
+    type: var
+    description: "The name of the channel or user you would like to notify about the incident (channel should start with #)."
+  - name: "invitees"
+    type: var
+    description: "The emails of the users that will be invited to the channel (by default, only the incident reporter)."
+    defaultValue: '{{ $.event.Reporter }}'
+  - name: "slackIntegrationName"
+    type: integration
+    description: "Slack integration."
+    options:
+      integration_type: slack
+steps:
+# Creates war-room channel
+- name: us-docker.pkg.dev/stackpulse/public/slack/channel/create
+  id: slack_create_war_room_channel
+  env:
+    CHANNEL_NAME: "incident {{ $.event.Name }} {{$.event.ID }}"
+    PURPOSE: '{{ $.event.Description }}'
+    TOPIC: "StackPulse War Room Channel for Incident {{ $.event.Name }} ({{ $.event.ID }})"
+    USERS: '{{ $.params.invitees }}'
+  envFrom:
+    integrationRef: '{{ $.params.slackIntegrationName }}'
+
+# Attach war-room channel to StackPulse incident
+- name: us-docker.pkg.dev/stackpulse/public/stackpulse/incident/update
+  id: attach_war_room_channel_to_incident
+  env:
+    INCIDENT_ID: '{{ $.event.ID }}'
+    SLACK_WAR_ROOM_NAME: '{{ $.channel_name }}'
+  envFrom:
+    integrationRef: '{{ $.params.slackIntegrationName }}'
+
+# Send message in notification channel about creation of war-room
+- name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
+  id: slack_alert_notification_channel
+  env:
+    SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ $.execution.id }}
+    MESSAGE_TEXT: "@channel, StackPulse created an incident https://app.stackpulse.io/incident/{{ $.event.ID }}\\nA War Room was created - #{{ $.channel_name }}"
+    RECIPIENTS: "{{ $.params.notificationChannel }}"
+  envFrom:
+    integrationRef: '{{ $.params.slackIntegrationName }}'
+
+# Send message in war-room with incident details
+- name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
+  id: slack_alert_war_room_channel
+  env:
+    SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ $.execution.id }}
+    MESSAGE_TEXT: "@channel, StackPulse created an incident https://app.stackpulse.io/incident/{{ $.event.ID }}\\nA War Room was created - #{{ $.channel_name }}"
+    RECIPIENTS: "#{{ $.channel_name }}"
+  envFrom:
+    integrationRef: '{{ $.params.slackIntegrationName }}'
