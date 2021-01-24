@@ -6,6 +6,10 @@ parameters:
   - name: notificationChannel
     type: var
     description: "The name of the channel you would like to notify about the incident (without a #)."
+  - name: invitees
+    type: var
+    description: "The emails of the users that will be invited to the channel (by default, only the incident reporter)."
+    defaultValue: '{{ $.event.Reporter }}'
   - name: zoomIntegrationName
     type: integration
     description: Zoom integration.
@@ -23,6 +27,7 @@ parameters:
     options:
       integration_type: slack
 steps:
+  # Create Zoom meeting
   - name: us-docker.pkg.dev/stackpulse/public/zoom/meeting/create
     id: zoom_create_meeting
     env:
@@ -30,15 +35,19 @@ steps:
       MEETING_TOPIC: "StackPulse War Room for Incident {{ $.event.Name }} ({{ $.event.ID }})"
     envFrom:
       integrationRef: "{{ $.params.zoomIntegrationName }}"
+  
+  # Creates war-room channel
   - name: us-docker.pkg.dev/stackpulse/public/slack/channel/create
     id: slack_create_war_room_channel
     env:
       CHANNEL_NAME: "incident {{ $.event.Name }} {{$.event.ID }}"
       PURPOSE: '{{ $.event.Description }}'
       TOPIC: "StackPulse War Room Channel for Incident {{ $.event.Name }} ({{ $.event.ID }})\n Zoom meeting link - {{ $.join_url }}"
-      USERS: '{{ $.event.Reporter }}'
+      USERS: '{{ $.params.invitees }}'
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
+  
+  # Attach war-room channel to StackPulse incident
   - name: us-docker.pkg.dev/stackpulse/public/stackpulse/incident/update
     id: attach_war_room_channel_to_incident
     env:
@@ -46,6 +55,8 @@ steps:
       SLACK_WAR_ROOM_NAME: '{{ $.channel_name }}'
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
+
+  # Send message in notification channel about creation of war-room
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
     id: slack_alert_notification_channel
     env:
@@ -54,6 +65,8 @@ steps:
       RECIPIENTS: "#{{ $.params.notificationChannel }}"
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
+
+  # Send message in war-room with incident details
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
     id: slack_alert_war_room_channel
     env:
@@ -62,7 +75,8 @@ steps:
       RECIPIENTS: "#{{ $.channel_name }}"
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
-  # interactively ask the reporter whether to page the on caller on PagerDuty
+  
+  # Interactively ask the reporter whether to page the on caller on PagerDuty
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
     id: slack_ask_on_caller_paging
     env:
@@ -73,6 +87,8 @@ steps:
       TIMEOUT: 2m
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
+  
+  # Create incident on PagerDuty
   - name: us-docker.pkg.dev/stackpulse/public/pagerduty/incident/create
     id: pagerduty_incident_create
     when: '{{ ieq $.slack_response "Yes" }}'
