@@ -9,7 +9,7 @@ parameters:
   - name: invitees
     type: var
     description: "The emails of the users that will be invited to the channel (by default, only the incident reporter)."
-    defaultValue: '{{ $.event.Reporter }}'
+    default: '{{ $.event.Reporter }}'
   - name: zoomIntegrationName
     type: integration
     description: Zoom integration.
