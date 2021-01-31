@@ -18,7 +18,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
 
 <br>
 
-<table border=2 style="border-radius: 4px;border-color:#d8d8d8;" border-style=outset>
+<table border=2 border-style=outset>
 
   <tr>
     <td border=0 width="110">
@@ -44,7 +44,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
 
 <br>
 
-<table border=2 style="border-radius: 4px;border-color:#d8d8d8;" border-style=outset>
+<table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/job-failed">
@@ -68,7 +68,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
 
 <br>
 
-<table border=2 style="border-radius: 4px;border-color:#d8d8d8;" border-style=outset>
+<table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/postgres/long-running-sessions">
@@ -92,7 +92,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
 
 <br>
 
-<table border=2 style="border-radius: 4px;border-color:#d8d8d8;" border-style=outset>
+<table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/rabbitmq/queues-overview">
@@ -116,7 +116,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
 
 <br>
 
-<table border=2 style="border-radius: 4px;border-color:#d8d8d8;" border-style=outset>
+<table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/elastic/get-stats">
@@ -139,7 +139,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
 
 <br>
 
-<table border=2 style="border-radius: 4px;border-color:#d8d8d8;" border-style=outset>
+<table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/redis/get-big-keys">
@@ -163,7 +163,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
 
 <br>
 
-<table border=2 style="border-radius: 4px;border-color:#d8d8d8;" border-style=outset>
+<table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/redis/diagnostics">
@@ -186,7 +186,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
 
 <br>
 
-<table border=2 style="border-radius: 4px;border-color:#d8d8d8;" border-style=outset>
+<table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/linux/diagnostics">
@@ -215,7 +215,7 @@ Playbooks in this section help automate incident management and communication fl
 
 <br>
 
-<table border=2 style="border-radius: 4px;border-color:#d8d8d8;" border-style=outset>
+<table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room">
@@ -236,7 +236,7 @@ Playbooks in this section help automate incident management and communication fl
 
 <br>
 
-<table border=2 style="border-radius: 4px;border-color:#d8d8d8;" border-style=outset>
+<table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room-pagerduty">
@@ -259,7 +259,7 @@ Playbooks in this section help automate incident management and communication fl
 
 <br>
 
-<table border=2 style="border-radius: 4px;border-color:#d8d8d8;" border-style=outset>
+<table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/create-incident-war-room-opsgenie">
@@ -282,7 +282,7 @@ Playbooks in this section help automate incident management and communication fl
 
 <br>
 
-<table border=2 style="border-radius: 4px;border-color:#d8d8d8;" border-style=outset>
+<table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/stackpulse/archive-incident-war-room">
