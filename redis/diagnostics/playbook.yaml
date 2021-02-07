@@ -7,20 +7,20 @@ parameters:
   # StackPulse SPD
   - name: runnerName
     type: var
-    description: SPD runner name to run the Redis commands on
+    description: SPD runner name to run the Redis commands on.
 
   # Redis
   - name: RedisPassword
     type: secret
-    description: Destination redis password
+    description: Destination redis password.
   - name: RedisIp
     type: var
-    description: redis host
+    description: Redis host name or ip.
 
   #Slack
   - name: SlackRecipients
     type: var
-    description: slack recipients
+    description: Slack recipients.
   - name: SlackIntegrationName
     type: integration
     description: Slack integration.
@@ -42,12 +42,12 @@ steps:
       INITIAL_COMMENT: "Redis general information summary (host: {{ $.params.RedisIp }})"
       TITLE: "redis-cli info"
       CONTENT: |-
-              Connected Clients: {{ $.'redis-info'.Clients.connected_clients }}
-              Blocked Clients: {{ $.'redis-info'.Clients.blocked_clients }}
-              Used Memory: {{ $.'redis-info'.Memory.used_memory_human }}
-              Peak Used Memory: {{ $.'redis-info'.Memory.used_memory_peak_human }}
-              Replication Backlog Size: {{ $.'redis-info'.Replication.repl_backlog_size }}
-              Server Uptime (Seconds): {{ $.'redis-info'.Server.uptime_in_seconds }}
+              Connected Clients: {{ $.'redis-info'.info.Clients.connected_clients }}
+              Blocked Clients: {{ $.'redis-info'.info.Clients.blocked_clients }}
+              Used Memory: {{ $.'redis-info'.info.Memory.used_memory_human }}
+              Peak Used Memory: {{ $.'redis-info'.info.Memory.used_memory_peak_human }}
+              Replication Backlog Size: {{ $.'redis-info'.info.Replication.repl_backlog_size }}
+              Server Uptime (Seconds): {{ $.'redis-info'.info.Server.uptime_in_seconds }}
       SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
       RECIPIENTS: "{{ $.params.SlackRecipients }}"
     envFrom:
