@@ -18,8 +18,7 @@ It gets the latest started pods in the namespace provided either by alert or by 
 
 ## Your experience
 
-![slack_screenshot](../../images/k8s_recent_pods.png)
-![slack_screenshot](../../images/k8s_logs_current_container.png)
+![slack_screenshot](../../images/k8s_recent_pods.svg)
 
 ## How to get started
 
