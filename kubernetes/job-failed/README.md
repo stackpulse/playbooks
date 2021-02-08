@@ -17,7 +17,7 @@ This playbook extracts logs from a failed Kubernetes job and optionally allows t
 
 ## Your experience
 
-![slack_screenshot](../../images/job_logs.png)
+![slack_screenshot](../../images/job_logs.svg)
 
 ## How to get started
 
