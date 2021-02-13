@@ -18,7 +18,7 @@ This playbook collects info, stats and metrics from an Elasticsearch cluster and
 
 ## Your experience
 
-![elastic stats as snippets in Slack](../../images/elastic_get_stats.png)
+![elastic stats as snippets in Slack](../../images/elastic_get_stats.svg)
 
 ## How to get started
 
