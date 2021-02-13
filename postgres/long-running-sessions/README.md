@@ -1,4 +1,4 @@
-# Postgres Long Running Sessions
+# PostgreSQL Long Running Sessions
 
 <img src="../../images/psql.png" width="150">
 
@@ -20,13 +20,13 @@ This playbook collects all non-idle long running sessions from PostgresSQL insta
 
 ## Your experience
 
-![slack_screenshot](../../images/postgress_sessions.png)
+![slack_screenshot](../../images/postgres_sessions.svg)
 
 ## How to get started
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/postgres/long-running-sessions/playbook.yaml)
 
-Not a Stackpulse user? Follow these steps:
+Not a StackPulse user? Follow these steps:
 
 1. Make sure your have a [StackPulse](https://stackpulse.com/get-started) account
 2. Configure a  new [Slack integration](https://docs.stackpulse.io/getting_started/#step-3-configure-a-new-slack-integration)
