@@ -9,6 +9,7 @@
 - [ ] Go over texts with @stackpulse/product
 - [ ] Explicitly discuss the _playbook name_, _image_ and _badges_
 - [ ] Explicitly consider various _benefits_. As a rule of thumb, there should be 2-3 of them
+- [ ] If the playbook has Slack outputs use the Slack experience template
 
 ### New playbooks
 - [ ] Tested Playbook in a production tenant
