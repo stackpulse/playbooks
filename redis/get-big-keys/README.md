@@ -16,7 +16,7 @@ It then sends that output to Slack recipients of your choice as a snippet.
 
 ## Your experience
 
-![redis big keys message](../../images/redis_big_keys.svg)
+![redis big keys](../../images/redis_big_keys.svg)
 
 ## How to get started
 
