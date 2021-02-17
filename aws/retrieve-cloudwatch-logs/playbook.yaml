@@ -1,0 +1,68 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  description: ""
+  name: retrieve-cloudwatch-logs
+parameters:
+  - name: AWSKeyID
+    type: secret
+    description: AWS secret key id
+  - name: AWSSecretAccessKey
+    type: secret
+    description: AWS secret access key
+  - name: AWSRegion
+    type: var
+    description: aws region to operate on
+  - name: LogsGroupName
+    type: var
+    description: AWS CloudWatch Group Name to operate on
+  - name: LogsGroupStream
+    type: var
+    description: AWS CloudWatch Stream Name to operate on
+  - name: LogsLimit
+    type: var
+    description: AWS logs limit to fetch
+  - name: ProjectName
+    type: var
+    description: Event Project Name
+  - name: SlackChannel
+    type: var
+    description: Destination slack channle
+  - name: SlackIntegration
+    type: integration
+    description: AWS secret key to fetch the ssh private key
+    options:
+      integration_type: slack
+steps:
+
+  # Fetch Cloudwatch logs given region, group-name, stream-name.
+  # Limit max logs with $.params.LogsLimit
+  - id: get_logs
+    name: amazon/aws-cli
+    env:
+      AWS_ACCESS_KEY_ID: "{{ $.params.AWSKeyID }}"
+      AWS_SECRET_ACCESS_KEY: "{{ $.params.AWSSecretAccessKey }}"
+    args:
+      - logs
+      - get-log-events
+      - --region
+      - "{{ $.params.AWSRegion }}"
+      - --log-group-name
+      - "{{ $.params.LogsGroupName }}"
+      - --log-stream-name
+      - "{{ $.params.LogsGroupStream }}"
+      - --limit
+      - "{{ $.params.LogsLimit }}"
+    output_parser:
+      name: us-docker.pkg.dev/stackpulse/public/json-parser
+
+  # Send slack snippet contains the logs to the relevant slack channel using slack integration.
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: slack-send-snippet
+    env:
+      TITLE: "{{ $.params.ProjectName }}"
+      CONTENT: "{{ toJson $.get_logs.events }}"
+      RECIPIENTS: "{{ $.params.SlackChannel }}"
+      SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+    envFrom:
+      integrationRef: "{{ $.params.SlackIntegration }}"
