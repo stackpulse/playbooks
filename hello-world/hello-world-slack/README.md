@@ -15,7 +15,7 @@ This playbook demonstrates basic StackPulse automation.
 
 ## Your experience
 
-![hello world](../../images/hello_world.png)
+![hello world](../../images/hello_world.svg)
 
 ## How to get started
 

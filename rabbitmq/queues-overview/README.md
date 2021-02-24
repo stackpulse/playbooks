@@ -19,9 +19,9 @@ This playbook collects an overview about RabbitMQ instance and classify it's mos
 
 ## Your experience
 
-<img src="../../images/rmq_top_queues.png" width="700">
+![rabbitMQ top queues](../../images/rmq_top_queues.svg)
 
-<img src="../../images/rmq_overview.png" width="700">
+![rabbitMQ overview](../../images/rmq_overview.svg)
 
 ## How to get started
 

@@ -15,7 +15,7 @@ This playbook opens a new Slack channel to be used as a war room for a new incid
 
 ## Your experience
 
-![war room created](../../images/war_room_created_without_zoom.png)
+![war room created](../../images/war_room_created.svg)
 
 ## How to get started
 

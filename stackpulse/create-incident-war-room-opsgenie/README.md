@@ -22,7 +22,7 @@ This playbook should be set up to be triggered by an incident creation event.
 
 ![war room created](../../images/war_room.gif)
 
-![war room created](../../images/war_room_created.png)
+![war room created](../../images/war_room_created.svg)
 
 ## How to get started
 
