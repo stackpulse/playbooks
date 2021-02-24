@@ -21,12 +21,12 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
 <table border=2 border-style=outset>
 
   <tr>
-    <td border=0 width="110">
+    <td border=0>
       <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/pod-restarting">
-      <img src="https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png"/>
+      <img src="https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png" style="min-width: 110px;"/>
       </a>
     </td>
-    <td border=0 width="90%">
+    <td border=0 width="100%">
       <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/pod-restarting"><b>Kubernetes Pod Restarting</b></a><br><br>
      This playbook solves consistent Pod Restarting events in a Kubernetes cluster.
      It gets the latest started pods in the namespace provided either by alert or by the user, then gets the current and previous (if exists) logs of the relevant container.
