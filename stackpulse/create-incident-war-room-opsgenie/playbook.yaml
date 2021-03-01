@@ -40,18 +40,18 @@ steps:
       MEETING_TOPIC: "StackPulse War Room for Incident {{ $.event.Name }} ({{ $.event.ID }})"
     envFrom:
       integrationRef: "{{ $.params.zoomIntegrationName }}"
-  
+
   # Creates war-room channel
   - name: us-docker.pkg.dev/stackpulse/public/slack/channel/create
     id: slack_create_war_room_channel
     env:
-      CHANNEL_NAME: "incident {{ $.event.Name }} {{$.event.ID }}"
+      CHANNEL_NAME: "incident {{ $.event.ID }} {{ $.event.Name }}"
       PURPOSE: '{{ $.event.Description }}'
       TOPIC: "StackPulse War Room Channel for Incident {{ $.event.Name }} ({{ $.event.ID }})\n Zoom meeting link - {{ $.join_url }}"
       USERS: '{{ $.params.invitees }}'
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
-  
+
   # Attach war-room channel to StackPulse incident
   - name: us-docker.pkg.dev/stackpulse/public/stackpulse/incident/update
     id: attach_war_room_channel_to_incident
@@ -70,7 +70,7 @@ steps:
       RECIPIENTS: "#{{ $.params.notificationChannel }}"
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
-  
+
   # Send message in war-room with incident details
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
     id: slack_alert_war_room_channel
