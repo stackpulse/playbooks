@@ -1,7 +1,7 @@
 apiVersion: stackpulse.io/v1
 kind: Playbook
 metadata:
-  name: postgres-long-sessions
+  name: postgres-terminate-long-sessions
 parameters:
 - name: "runnerName"
   type: var
@@ -24,15 +24,21 @@ parameters:
 - name: "password"
   type: secret
   description: "Postgres DB password"
+- name: waitTimeoutSeconds
+  type: var
+  description: "Time to wait in seconds between re-checks of the termination queires status"    
+- name: longDurationSeconds
+  type: var
+  description: "Time in seconds for marking a session as a long running one"    
 - name: "slackIntegrationName"
   type: integration
   description: "Slack integration"
   options:
-    integration_type: slack
+    integration_type: slack  
 steps:
 # Getting long running postgres sessions
 - name: us-docker.pkg.dev/stackpulse/public/psql/query/long-running-sessions
-  id: postgress_long_running_sessions
+  id: long_sessions
   runner: '{{ .params.runnerName }}'
   env:
     DB: '{{ .params.db }}'
@@ -40,22 +46,50 @@ steps:
     PASSWORD: '{{ secret .params.password }}'
     PORT: '{{ .params.port }}'
     USER: '{{ .params.user }}'
+    LONG_DURATION_SECONDS: '{{ .params.longDurationSeconds }}'
+
 # Will be executed only if there are any long running sessions
 - when: '{{ gt (len .data) 0 }}'
   steps:
   # Sending a table-like data of the long running sessions to slack
-  - name: us-docker.pkg.dev/stackpulse/public/parsers/tabulate
+  - name: us-docker.pkg.dev/stackpulse/public/utils/tabulate
     id: tabulate_postgres_query
     env:
-      HEADERS: 'keys'
+      HEADERS: 'pid,age,application_name,client_addr,client_port,query,state,usename,wait_event,wait_event_type,xact_age'
       INPUT: '{{ toJson .data }}'
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
     id: send_query_snippet
     env:
       SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
       CONTENT: '{{ .tabulate_output }}'
-      INITIAL_COMMENT: Displaying long running postgres sessions
+      INITIAL_COMMENT: Displaying long running Postgres sessions
       RECIPIENTS: '{{ .params.slackRecipient }}'
       TITLE: psql-long-running-sessions
+      FILE_TYPE: sql
     envFrom:
       integrationRef: '{{ .params.slackIntegrationName }}'
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
+    id: choose_sessions
+    env:
+      SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
+      RECIPIENTS: "{{  $.params.slackRecipient }}"
+      QUESTION: Please select sessions to terminate
+      DEFAULT_RESPONSE: ""
+      SELECTOR_TYPE: MULTI_SELECT
+      TIMEOUT: "3m"
+      RESPONSES: "None{{ range $.long_sessions.data }},{{ .pid }}{{ end }}"
+    envFrom:
+      integrationRef: "{{  $.params.slackIntegrationName }}"
+# Will be executed only if there are chosen sessions
+- when: '{{ and (gt (len $.long_sessions.data) 0) (gt (len $.choose_sessions.selected_responses) 0) (ne $.choose_sessions.selected_responses[0] "None") }}'
+  steps:
+  # Terminating the requested sessions
+    - name: us-docker.pkg.dev/stackpulse/public/psql/query/terminate
+      id: postgresql_query_terminate
+      env:
+        PASSWORD: '{{ secret .params.password }}'
+        PORT: '{{ .params.port }}'
+        USER: '{{ $.params.user }}'
+        HOST: '{{ .params.host }}'
+        DB: '{{  $.params.db }}'
+        PIDS: "{{ $.choose_sessions.selected_responses[0] }}{{ range (rest $.choose_sessions.selected_responses) }},{{ . }}{{ end }}"
