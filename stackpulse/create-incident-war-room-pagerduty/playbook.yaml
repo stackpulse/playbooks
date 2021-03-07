@@ -35,18 +35,18 @@ steps:
       MEETING_TOPIC: "StackPulse War Room for Incident {{ $.event.Name }} ({{ $.event.ID }})"
     envFrom:
       integrationRef: "{{ $.params.zoomIntegrationName }}"
-  
+
   # Creates war-room channel
   - name: us-docker.pkg.dev/stackpulse/public/slack/channel/create
     id: slack_create_war_room_channel
     env:
-      CHANNEL_NAME: "incident {{ $.event.Name }} {{$.event.ID }}"
+      CHANNEL_NAME: "{{ $.event.ID }} {{ $.event.Name }}"
       PURPOSE: '{{ $.event.Description }}'
       TOPIC: "StackPulse War Room Channel for Incident {{ $.event.Name }} ({{ $.event.ID }})\n Zoom meeting link - {{ $.join_url }}"
       USERS: '{{ $.params.invitees }}'
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
-  
+
   # Attach war-room channel to StackPulse incident
   - name: us-docker.pkg.dev/stackpulse/public/stackpulse/incident/update
     id: attach_war_room_channel_to_incident
@@ -75,7 +75,7 @@ steps:
       RECIPIENTS: "#{{ $.channel_name }}"
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
-  
+
   # Interactively ask the reporter whether to page the on caller on PagerDuty
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
     id: slack_ask_on_caller_paging
@@ -87,7 +87,7 @@ steps:
       TIMEOUT: 2m
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
-  
+
   # Create incident on PagerDuty
   - name: us-docker.pkg.dev/stackpulse/public/pagerduty/incident/create
     id: pagerduty_incident_create

@@ -20,7 +20,7 @@ steps:
 - name: us-docker.pkg.dev/stackpulse/public/slack/channel/create
   id: slack_create_war_room_channel
   env:
-    CHANNEL_NAME: "incident {{ $.event.Name }} {{$.event.ID }}"
+    CHANNEL_NAME: "{{ $.event.ID }} {{ $.event.Name }}"
     PURPOSE: '{{ $.event.Description }}'
     TOPIC: "StackPulse War Room Channel for Incident {{ $.event.Name }} ({{ $.event.ID }})"
     USERS: '{{ $.params.invitees }}'
