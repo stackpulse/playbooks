@@ -17,7 +17,7 @@ This playbook collects all non-idle long running sessions from a PostgresSQL ins
 - Initiate triage by finding the applications which running the long sessions queries
 - Provide information from production PostgresSQL instance without having to provide multiple people direct access to production
 - Assist engineers to handle production issues by getting wider context regardless of their PostgresSQL expertise level
-- Easily terminate chosenn sessions directly from Slack
+- Easily terminate chosen sessions directly from Slack
 
 ## Your experience
 
