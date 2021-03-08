@@ -24,9 +24,6 @@ parameters:
 - name: "password"
   type: secret
   description: "Postgres DB password"
-- name: waitTimeoutSeconds
-  type: var
-  description: "Time to wait in seconds between re-checks of the termination status"    
 - name: longDurationSeconds
   type: var
   description: "Time in seconds for marking a session as a long running one"    
@@ -76,7 +73,7 @@ steps:
       QUESTION: Please select sessions to terminate
       DEFAULT_RESPONSE: ""
       SELECTOR_TYPE: MULTI_SELECT
-      TIMEOUT: "3m"
+      TIMEOUT: "5m"
       RESPONSES: "None{{ range $.long_sessions.data }},{{ .pid }}{{ end }}"
     envFrom:
       integrationRef: "{{  $.params.slackIntegrationName }}"
