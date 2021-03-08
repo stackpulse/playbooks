@@ -26,7 +26,7 @@ parameters:
   description: "Postgres DB password"
 - name: waitTimeoutSeconds
   type: var
-  description: "Time to wait in seconds between re-checks of the termination queires status"    
+  description: "Time to wait in seconds between re-checks of the termination status"    
 - name: longDurationSeconds
   type: var
   description: "Time in seconds for marking a session as a long running one"    
