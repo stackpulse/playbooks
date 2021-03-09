@@ -9,7 +9,7 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/postgres/long-running-sessions/playbook.yaml)
 
-This playbook collects all non-idle long running sessions from PostgresSQL instance and send it to Slack recipients.
+This playbook collects all non-idle long running sessions from a PostgresSQL instance, sends them to Slack and interactively allows the user to terminate the sessions.
 
 ## Your benefits
 
@@ -17,10 +17,11 @@ This playbook collects all non-idle long running sessions from PostgresSQL insta
 - Initiate triage by finding the applications which running the long sessions queries
 - Provide information from production PostgresSQL instance without having to provide multiple people direct access to production
 - Assist engineers to handle production issues by getting wider context regardless of their PostgresSQL expertise level
+- Easily terminate chosen sessions directly from Slack
 
 ## Your experience
 
-![slack_screenshot](../../images/postgres_sessions.svg)
+![slack_screenshot](../../images/postgres_terminate_long_running.svg)
 
 ## How to get started
 

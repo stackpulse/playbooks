@@ -1,7 +1,7 @@
 apiVersion: stackpulse.io/v1
 kind: Playbook
 metadata:
-  name: postgres-long-sessions
+  name: postgres-terminate-long-sessions
 parameters:
 - name: "runnerName"
   type: var
@@ -24,15 +24,22 @@ parameters:
 - name: "password"
   type: secret
   description: "Postgres DB password"
+- name: waitTimeoutSeconds
+  type: var
+  description: "Time to wait in seconds between re-checks of the termination queires status"    
+  default: "20"  
+- name: longDurationSeconds
+  type: var
+  description: "Time in seconds for marking a session as a long running one"    
 - name: "slackIntegrationName"
   type: integration
   description: "Slack integration"
   options:
-    integration_type: slack
+    integration_type: slack  
 steps:
 # Getting long running postgres sessions
 - name: us-docker.pkg.dev/stackpulse/public/psql/query/long-running-sessions
-  id: postgress_long_running_sessions
+  id: long_sessions
   runner: '{{ .params.runnerName }}'
   env:
     DB: '{{ .params.db }}'
@@ -40,22 +47,113 @@ steps:
     PASSWORD: '{{ secret .params.password }}'
     PORT: '{{ .params.port }}'
     USER: '{{ .params.user }}'
+    LONG_DURATION_SECONDS: '{{ .params.longDurationSeconds }}'
+
 # Will be executed only if there are any long running sessions
 - when: '{{ gt (len .data) 0 }}'
   steps:
   # Sending a table-like data of the long running sessions to slack
-  - name: us-docker.pkg.dev/stackpulse/public/parsers/tabulate
+  - name: us-docker.pkg.dev/stackpulse/public/utils/tabulate
     id: tabulate_postgres_query
     env:
-      HEADERS: 'keys'
+      HEADERS: 'pid,age,application_name,client_addr,client_port,query,state,usename,wait_event,wait_event_type,xact_age'
       INPUT: '{{ toJson .data }}'
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
     id: send_query_snippet
     env:
       SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
       CONTENT: '{{ .tabulate_output }}'
-      INITIAL_COMMENT: Displaying long running postgres sessions
+      INITIAL_COMMENT: Displaying long running Postgres sessions
       RECIPIENTS: '{{ .params.slackRecipient }}'
       TITLE: psql-long-running-sessions
+      FILE_TYPE: sql
     envFrom:
       integrationRef: '{{ .params.slackIntegrationName }}'
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
+    id: choose_sessions
+    env:
+      SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
+      RECIPIENTS: "{{  $.params.slackRecipient }}"
+      QUESTION: Please select sessions to terminate
+      DEFAULT_RESPONSE: ""
+      SELECTOR_TYPE: MULTI_SELECT
+      TIMEOUT: "5m"
+      RESPONSES: "None{{ range $.long_sessions.data }},{{ .pid }}{{ end }}"
+    envFrom:
+      integrationRef: "{{  $.params.slackIntegrationName }}"
+
+# Will be executed only if there are chosen sessions
+- when: '{{ and (gt (len $.long_sessions.data) 0) (gt (len $.choose_sessions.selected_responses) 0) (ne $.choose_sessions.selected_responses[0] "None") }}'
+  steps:
+    # Terminating the requested sessions
+    - name: us-docker.pkg.dev/stackpulse/public/psql/query/terminate
+      id: postgresql_query_terminate
+      env:
+        PASSWORD: '{{ secret .params.password }}'
+        PORT: '{{ .params.port }}'
+        USER: '{{ $.params.user }}'
+        HOST: '{{ .params.host }}'
+        DB: '{{  $.params.db }}'
+        PIDS: "{{ $.choose_sessions.selected_responses[0] }}{{ range (rest $.choose_sessions.selected_responses) }},{{ . }}{{ end }}"
+    # Wait for a while before re-checking long sessions status
+    - name: us-docker.pkg.dev/stackpulse/public/utils/wait
+      id: wait
+      env:
+        SECONDS: "{{ $.params.waitUntilTerminateSeconds }}"
+    - name: us-docker.pkg.dev/stackpulse/public/psql/query/long-running-sessions
+      id: long_sessions_second
+      runner: '{{ .params.runnerName }}'
+      env:
+        DB: '{{ .params.db }}'
+        HOST: '{{ .params.host }}'
+        PASSWORD: '{{ secret .params.password }}'
+        PORT: '{{ .params.port }}'
+        USER: '{{ .params.user }}'
+        LONG_DURATION_SECONDS: '{{ .params.longDurationSeconds }}' 
+    - name: us-docker.pkg.dev/stackpulse/public/utils/inline-python
+      id: summarize
+      env:
+        INLINE_SCRIPT: |
+          import json
+          terminated, stuck = [], []
+          selected_pids = json.loads(r"""{{ toJson $.choose_sessions.selected_responses }}""")
+          original_sessions = json.loads(r"""{{ toJson $.long_sessions.data }}""")
+          second_session_list = json.loads(r"""{{ toJson $.long_sessions_second }}""")
+
+          map_sessions = {}
+          for session in original_sessions:
+            map_sessions[session.get("pid", "")] = session
+            
+          sessions_after_terminate = {}
+          for session in second_session_list.get("data", []):
+            sessions_after_terminate[session.get("pid", "")] = session
+          
+          for pid in selected_pids:
+            session = map_sessions.get(pid, {})
+            if not sessions_after_terminate.get(pid):
+              terminated.append(session)
+              continue
+            stuck.append(session)
+            
+          output = {"terminated":terminated, "stuck":stuck}
+          print("<-- END -->" + json.dumps(output))
+    - name: us-docker.pkg.dev/stackpulse/public/utils/tabulate
+      id: tabulate_summary
+      env:
+        INPUT: "{{ toJson $.summarize }}"
+        HEADERS: pid,application_name,age,blocked_by,query
+        GROUP_HEADER_NAME: "type"
+        MAP_GROUP: "terminated,stuck"
+        MAX_COLUMN_LENGTH: "20"
+    - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+      id: send_query_snippet
+      env:
+        SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ .execution.id }}
+        CONTENT: '{{ .tabulate_summary.tabulate_output }}'
+        INITIAL_COMMENT: Summarize sessions termination
+        RECIPIENTS: '{{ .params.slackRecipient }}'
+        TITLE: psql-terminate-sessions-summary
+        FILE_TYPE: sql
+      envFrom:
+          integrationRef: '{{ .params.slackIntegrationName }}'
+          
