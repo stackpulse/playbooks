@@ -19,10 +19,8 @@ This playbook execute command for given AWS Auto Scaling Group and and verify it
 Parameters:
 ![asg-execute-command-result](../../images/asg-params.png)
 
-Execution:
-
 Result:
-![asg-execute-command-result](../../images/asg-execute-command-result.png)
+![asg-execute-command-result](../../images/asg-execute-command-result.svg)
 
 ## How to get started
 
