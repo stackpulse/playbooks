@@ -16,12 +16,12 @@ This playbook execute command for given AWS Auto Scaling Group and and verify it
 
 ## Your experience
 
-Parameters:
+#### Parameters:
 ![asg-execute-command-result](../../images/asg-params.png)
 
-Result:
+#### Result:
 ![asg-execute-command-result](../../images/asg-execute-command-result.svg)
-
+as
 ## How to get started
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/aws/asg-execute-command/playbook.yaml)
