@@ -11,7 +11,7 @@ This playbook execute command for given AWS Auto Scaling Group and and verify it
 
 ## Your benefits
 
-- Execute command for given AWS Auto Scaling Group
+- Retrieve all instances of an AWS Auto Scaling Group and execute a remediation command on each one
 - Get health metrics for given AWS Auto Scaling Group
 
 ## Your experience
