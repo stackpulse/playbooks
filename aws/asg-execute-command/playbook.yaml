@@ -1,0 +1,161 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  description: "Execute a command on all instances of an AWS Auto Scaling Group and and verify its health"
+  name: asg-execute-command
+parameters:
+  - name: sshAwsKey
+    type: var
+    description: AWS secret key to fetch the ssh private key
+  - name: autoScalingGroupName
+    type: var
+    description: the relevant autoscaling group to operate on
+  - name: region
+    type: var
+    description: AWS region to operate on
+  - name: runnerName
+    type: spd
+    description: SPD runner name which has ssh access to the destination machine
+  - name: sshCommand
+    type: var
+    description: ssh command to run on the autoscaling group machines
+  - name: slackIntegration
+    type: integration
+    description: slack integration name
+    options:
+      integration_type: slack
+  - name: slackChannel
+    type: var
+    description: slack channel used for playbook communications
+steps:
+
+  # Fetching information regarding the relevant asg
+  - id: query_chosen_autoscaling_group
+    name: amazon/aws-cli
+    args:
+      - autoscaling
+      - describe-auto-scaling-groups
+      - --auto-scaling-group-names
+      - "{{ $.params.autoScalingGroupName }}"
+      - --region
+      - "{{ $.params.region }}"
+    output_parser:
+      name: us-docker.pkg.dev/stackpulse/public/json-parser
+    runner: "{{ $.params.runnerName }}"
+
+  # Suspened asg processes
+  - id: suspend_processes
+    name: amazon/aws-cli
+    args:
+      - autoscaling
+      - suspend-processes
+      - --auto-scaling-group-name
+      - "{{ $.query_chosen_autoscaling_group.AutoScalingGroups[0].AutoScalingGroupName }}"
+      - --region
+      - "{{ $.params.region }}"
+    runner: "{{ $.params.runnerName }}"
+
+  # Fetch all ips for the relevant instance ids
+  - name: us-docker.pkg.dev/stackpulse/public/aws/get-ips-for-instances
+    id: get_ips
+    env:
+      INSTANCE_IDS: "{{ toJson $.query_chosen_autoscaling_group.AutoScalingGroups[0].Instances[:].InstanceId }}"
+      REGION: "{{ $.params.region }}"
+    runner: "{{ $.params.runnerName }}"
+
+  # Execute SSH command on the asg machines
+  - name: us-docker.pkg.dev/stackpulse/public/ssh/parallel-command
+    id: exec_ssh_command
+    runner: "{{ $.params.runnerName }}"
+    env:
+      COMMAND: "{{ $.params.sshCommand }}"
+      USERNAME: ec2-user
+      HOSTNAMES: "{{ toJson $.get_ips.ips }}"
+      AWS_SECRET_KEY: "{{ $.params.sshAwsKey }}"
+      AWS_REGION: "{{ $.params.region }}"
+
+  # Resume processess for the asg
+  - id: resume_processes
+    name: amazon/aws-cli
+    args:
+      - autoscaling
+      - resume-processes
+      - --auto-scaling-group-name
+      - "{{ $.query_chosen_autoscaling_group.AutoScalingGroups[0].AutoScalingGroupName }}"
+      - --region
+      - "{{ $.params.region }}"
+    runner: "{{ $.params.runnerName }}"
+
+  # Fetch the load balancer for the asg (used for the health check)
+  - id: get_load_balancer_target_groups
+    name: amazon/aws-cli
+    runner: "{{ $.params.runnerName }}"
+    args:
+      - autoscaling
+      - describe-load-balancer-target-groups
+      - --auto-scaling-group-name
+      - "{{
+        $.query_chosen_autoscaling_group.AutoScalingGroups[0].AutoScalingGroupName }}"
+      - --region
+      - "{{ $.params.region }}"
+    output_parser:
+      name: us-docker.pkg.dev/stackpulse/public/json-parser
+
+  # Run health check. Finish when healthy.
+  - foreach:
+      in:
+        range: [0,2]
+      key: k
+      value: v
+      break: '{{ ine
+        $.target_health_foreach.TargetHealthDescriptions[0].TargetHealth.State
+        "unhealthy"}}'
+      steps:
+        # Describe asg health
+        - id: target_health_foreach
+          name: amazon/aws-cli
+          runner: "{{ $.params.runnerName }}"
+          args:
+            - elbv2
+            - describe-target-health
+            - --target-group-arn
+            - "{{
+              $.get_load_balancer_target_groups.LoadBalancerTargetGroups[0].LoadBalancerTargetGroupARN }}"
+            - --region
+            - "{{ $.params.region }}"
+          output_parser:
+            name: us-docker.pkg.dev/stackpulse/public/json-parser
+
+  # Print relevant message
+  - when: '{{ eq
+      $.target_health_foreach.TargetHealthDescriptions[0].TargetHealth.State
+      "healthy"}}'
+    steps:
+      - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+        id: slack_send_healthy_snippet
+        env:
+          TITLE: "auto scaling group is healthy"
+          CONTENT: >
+            Execute command on autoscaling group has finished.
+
+            autoscaling group {{ $.query_chosen_autoscaling_group.AutoScalingGroups[0].AutoScalingGroupName }} is healthy and ready for operation
+          RECIPIENTS: "{{ $.params.slackChannel }}"
+          SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+        envFrom:
+          integrationRef: "{{ $.params.slackIntegration }}"
+  - when: '{{ eq
+      $.target_health_foreach.TargetHealthDescriptions[0].TargetHealth.State
+      "unhealthy"}}'
+    steps:
+      - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+        id: slack_send_not_healthy_snippet
+        env:
+          TITLE: "auto scaling group is not healthy"
+          CONTENT: >
+            Execute command on autoscaling group has finished.
+
+            autoscaling group {{ $.query_chosen_autoscaling_group.AutoScalingGroups[0].AutoScalingGroupName }} is not healthy. please pay attention.
+          RECIPIENTS: "{{ $.params.slackChannel }}"
+          SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+        envFrom:
+          integrationRef: "{{ $.params.slackIntegration }}"
