@@ -132,7 +132,7 @@ steps:
       "healthy"}}'
     steps:
       - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
-        id: slack-send-snippet
+        id: slack_send_healthy_snippet
         env:
           CONTENT: >
             Execute command on autoscaling group has finished.
@@ -147,7 +147,7 @@ steps:
       "unhealthy"}}'
     steps:
       - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
-        id: slack-send-snippet
+        id: slack_send_not_healthy_snippet
         env:
           CONTENT: >
             Execute command on autoscaling group has finished.
