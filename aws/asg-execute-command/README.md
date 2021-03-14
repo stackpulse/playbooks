@@ -16,11 +16,11 @@ This playbook execute command for given AWS Auto Scaling Group and and verify it
 
 ## Your experience
 
-### Parameters:
+### Parameters
 
 ![asg-execute-command-result](../../images/asg-params.png)
 
-### Result:
+### Result
 
 ![asg-execute-command-result](../../images/asg-execute-command-result.svg)
 
