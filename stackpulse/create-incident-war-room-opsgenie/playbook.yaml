@@ -35,6 +35,7 @@ steps:
 # Create Zoom meeting
   - name: us-docker.pkg.dev/stackpulse/public/zoom/meeting/create
     id: zoom_create_meeting
+    ignoreFailure: true
     env:
       HOST_EMAIL: "{{ $.event.Reporter }}"
       MEETING_TOPIC: "StackPulse War Room for Incident {{ $.event.Name }} ({{ $.event.ID }})"
@@ -47,7 +48,7 @@ steps:
     env:
       CHANNEL_NAME: "{{ $.event.ID }} {{ $.event.Name }}"
       PURPOSE: '{{ $.event.Description }}'
-      TOPIC: "StackPulse War Room Channel for Incident {{ $.event.Name }} ({{ $.event.ID }})\n Zoom meeting link - {{ $.join_url }}"
+      TOPIC: "StackPulse War Room Channel for Incident {{ $.event.Name }} ({{ $.event.ID }})\n {{- if $.join_url }} Zoom meeting link - {{ $.join_url }} {{ end }}"      
       USERS: '{{ $.params.invitees }}'
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
@@ -65,8 +66,8 @@ steps:
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
     id: slack_alert_notification_channel
     env:
-      SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ $.execution.id }}
-      MESSAGE_TEXT: "@channel, StackPulse created an incident https://app.stackpulse.io/incident/{{ $.event.ID }}\nA War Room was created - #{{ $.channel_name }}\n A Zoom Meeting was created - {{ $.join_url }} "
+      SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ $.execution.id }}      
+      MESSAGE_TEXT: "@channel, *StackPulse created an incident*\nhttps://app.stackpulse.io/incident/{{ $.event.ID }}\n*A War Room was created*\n#{{ $.channel_name }} {{- if $.join_url }} *A Zoom Meeting was created*\n{{ $.join_url }} {{ end }}"
       RECIPIENTS: "#{{ $.params.notificationChannel }}"
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
@@ -75,8 +76,8 @@ steps:
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
     id: slack_alert_war_room_channel
     env:
-      SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ $.execution.id }}
-      MESSAGE_TEXT: "@channel, StackPulse created an incident https://app.stackpulse.io/incident/{{ $.event.ID }}\nA War Room was created - #{{ $.channel_name }}\n A Zoom Meeting was created - {{ $.join_url }}"
+      SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ $.execution.id }}      
+      MESSAGE_TEXT: "@channel, *StackPulse created an incident*\nhttps://app.stackpulse.io/incident/{{ $.event.ID }}\n*A War Room was created*\n#{{ $.channel_name }} {{- if $.join_url }} \n*A Zoom Meeting was created*\n{{ $.join_url }} {{ end }}"
       RECIPIENTS: "#{{ $.channel_name }}"
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
