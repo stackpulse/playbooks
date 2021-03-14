@@ -1,7 +1,7 @@
 apiVersion: stackpulse.io/v1
 kind: Playbook
 metadata:
-  description: "Execute command for given AWS Auto Scaling Group and and verify it's health"
+  description: "Execute a command on all instances of an AWS Auto Scaling Group and and verify its health"
   name: asg-execute-command
 parameters:
   - name: sshAwsKey
