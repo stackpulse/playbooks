@@ -41,7 +41,7 @@ steps:
   id: slack_alert_notification_channel
   env:
     SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ $.execution.id }}
-    MESSAGE_TEXT: "@channel, StackPulse created an incident https://app.stackpulse.io/incident/{{ $.event.ID }}\\nA War Room was created - #{{ $.channel_name }}"
+    MESSAGE_TEXT: "@channel, *StackPulse created an incident*\nhttps://app.stackpulse.io/incident/{{ $.event.ID }}\n*A War Room was created*\n#{{ $.channel_name }}"
     RECIPIENTS: "{{ $.params.notificationChannel }}"
   envFrom:
     integrationRef: '{{ $.params.slackIntegrationName }}'
@@ -51,7 +51,7 @@ steps:
   id: slack_alert_war_room_channel
   env:
     SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ $.execution.id }}
-    MESSAGE_TEXT: "@channel, StackPulse created an incident https://app.stackpulse.io/incident/{{ $.event.ID }}\\nA War Room was created - #{{ $.channel_name }}"
+    MESSAGE_TEXT: "@channel, *StackPulse created an incident*\nhttps://app.stackpulse.io/incident/{{ $.event.ID }}\n*A War Room was created*\n#{{ $.channel_name }}"
     RECIPIENTS: "#{{ $.channel_name }}"
   envFrom:
     integrationRef: '{{ $.params.slackIntegrationName }}'
