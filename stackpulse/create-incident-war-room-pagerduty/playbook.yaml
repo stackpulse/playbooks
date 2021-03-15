@@ -10,11 +10,42 @@ parameters:
     type: var
     description: "The emails of the users that will be invited to the channel (by default, only the incident reporter)."
     default: '{{ $.event.Reporter }}'
+  - name: reporter
+    type: var
+    description: The received event reporter.
+    default: '{{ $.event.Reporter }}'  
+  - name: eventID
+    type: var
+    description: The received event ID.
+    default: '{{ $.event.ID }}'
+  - name: eventName
+    type: var
+    description: The received event name.
+    default: '{{ $.event.Name }}'
+  - name: eventDescription
+    type: var
+    description: The received event description.
+    default: '{{ $.event.Description }}'
+  - name: severity
+    type: var
+    description: The received event severity.
+    default: '{{ $.event.Severity }}'  
+  - name: warRoomChannelName
+    type: var
+    description: The War Room Slack channel name to be attached to the incident.
   - name: zoomIntegrationName
     type: integration
     description: Zoom integration.
     options:
       integration_type: zoom
+  - name: slackOnCaller
+    type: var
+    description: The Slack recepient on caller to page.
+    default: '{{ $.event.Reporter }}'     
+  - name: pagerDutyOnCaller
+    type: var
+    description: The PagerDuty on caller to page.
+    default: '{{ $.event.Reporter }}'     
   - name: pagerDutyToken
     type: secret
     description: PagerDuty API Token.
@@ -32,8 +63,8 @@ steps:
     id: zoom_create_meeting
     ignoreFailure: true
     env:
-      HOST_EMAIL: "{{ $.event.Reporter }}"
-      MEETING_TOPIC: "StackPulse War Room for Incident {{ $.event.Name }} ({{ $.event.ID }})"
+      HOST_EMAIL: "{{ $.params.reporter }}"
+      MEETING_TOPIC: "StackPulse War Room for Incident {{ $.params.eventName }} ({{ $.params.eventID }})"
     envFrom:
       integrationRef: "{{ $.params.zoomIntegrationName }}"
 
@@ -41,9 +72,9 @@ steps:
   - name: us-docker.pkg.dev/stackpulse/public/slack/channel/create
     id: slack_create_war_room_channel
     env:
-      CHANNEL_NAME: "{{ $.event.ID }} {{ $.event.Name }}"
-      PURPOSE: '{{ $.event.Description }}'
-      TOPIC: "StackPulse War Room Channel for Incident {{ $.event.Name }} ({{ $.event.ID }})\n {{- if $.join_url }} Zoom meeting link - {{ $.join_url }} {{ end }}"
+      CHANNEL_NAME: "{{ $.params.eventID }} {{ $.params.eventName }}"
+      PURPOSE: '{{ $.params.eventDescription }}'
+      TOPIC: "StackPulse War Room Channel for Incident {{ $.params.eventName }} ({{ $.params.eventID }})\n {{- if $.join_url }} Zoom meeting link {{ $.join_url }} {{ end }}"
       USERS: '{{ $.params.invitees }}'
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
@@ -52,7 +83,7 @@ steps:
   - name: us-docker.pkg.dev/stackpulse/public/stackpulse/incident/update
     id: attach_war_room_channel_to_incident
     env:
-      INCIDENT_ID: '{{ $.event.ID }}'
+      INCIDENT_ID: '{{ $.params.eventID }}'
       SLACK_WAR_ROOM_NAME: '{{ $.channel_name }}'
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
@@ -62,7 +93,7 @@ steps:
     id: slack_alert_notification_channel
     env:
       SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ $.execution.id }}
-      MESSAGE_TEXT: "@channel, *StackPulse created an incident*\nhttps://app.stackpulse.io/incident/{{ $.event.ID }}\n*A War Room was created*\n#{{ $.channel_name }} {{- if $.join_url }} *A Zoom Meeting was created*\n{{ $.join_url }} {{ end }}"
+      MESSAGE_TEXT: "@channel, *StackPulse created an incident*\nhttps://app.stackpulse.io/incident/{{ $.params.eventID }}\n*A War Room was created*\n#{{ $.params.warRoomChannelName }} {{- if $.join_url }} \n*A Zoom Meeting was created*\n{{ $.join_url }} {{ end }}"
       RECIPIENTS: "#{{ $.params.notificationChannel }}"
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
@@ -72,8 +103,8 @@ steps:
     id: slack_alert_war_room_channel
     env:
       SP_REDIRECT_URL: https://app.stackpulse.io/execution/{{ $.execution.id }}
-      MESSAGE_TEXT: "@channel, *StackPulse created an incident*\nhttps://app.stackpulse.io/incident/{{ $.event.ID }}\n*A War Room was created*\n#{{ $.channel_name }} {{- if $.join_url }} \n*A Zoom Meeting was created*\n{{ $.join_url }} {{ end }}"
-      RECIPIENTS: "#{{ $.channel_name }}"
+      MESSAGE_TEXT: "@channel, *StackPulse created an incident*\nhttps://app.stackpulse.io/incident/{{ $.params.eventID }}\n*A War Room was created*\n#{{ $.params.warRoomChannelName }} {{- if $.join_url }} \n*A Zoom Meeting was created*\n{{ $.join_url }} {{ end }}"
+      RECIPIENTS: "#{{ $.params.warRoomChannelName }}"
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
 
@@ -83,7 +114,7 @@ steps:
     env:
       DEFAULT_RESPONSE: "No"
       QUESTION: "Would you like to page the on-caller?"
-      RECIPIENTS: '{{ $.event.Reporter }}'
+      RECIPIENTS: '{{ $.params.slackOnCaller }}'
       RESPONSES: "Yes,No"
       TIMEOUT: 2m
     envFrom:
@@ -95,7 +126,7 @@ steps:
     when: '{{ ieq $.slack_response "Yes" }}'
     env:
       PAGERDUTY_TOKEN: '{{ secret $.params.pagerDutyToken }}'
-      PAGERDUTY_USER_EMAIL: '{{ $.event.Reporter }}'
+      PAGERDUTY_USER_EMAIL: '{{ $.params.pagerDutyOnCaller }}'
       SERVICE_NAME: '{{ $.params.pagerDutyService }}'
-      TITLE: '{{ $.event.Name | kebabcase }}-{{ $.event.ID | kebabcase }}'
-      URGENCY: '{{ if ieq $.event.Severity "normal" }}low{{ else }}high{{ end }}'
+      TITLE: '{{ $.params.eventName | kebabcase }}-{{ $.params.eventID | kebabcase }}'
+      URGENCY: '{{ if ieq $.params.severity "normal" }}low{{ else }}high{{ end }}'
