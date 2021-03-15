@@ -3,29 +3,29 @@ kind: Playbook
 metadata:
   name: create-incident-war-room
 parameters:
-  - name: "notificationChannel"
+  - name: notificationChannel
     type: var
     description: "The name of the channel or user you would like to notify about the incident (channel should start with #)."
-  - name: "invitees"
+  - name: invitees
     type: var
     description: "The emails of the users that will be invited to the channel (by default, only the incident reporter)."
     default: '{{ $.event.Reporter }}'
-  - name: "eventID"
+  - name: eventID
     type: var
     description: "The received event ID."
     default: '{{ $.event.ID }}'
-  - name: "eventName"
+  - name: eventName
     type: var
     description: "The received event Name."
     default: '{{ $.event.Name }}'
-  - name: "eventDescription"
+  - name: eventDescription
     type: var
     description: "The received event Description."
     default: '{{ $.event.Description }}'
-  - name: "warRoomChannelName"
+  - name: warRoomChannelName
     type: var
     description: "The War Room Slack channel name to be attached to the incident."    
-  - name: "slackIntegrationName"
+  - name: slackIntegrationName
     type: integration
     description: "Slack integration."
     options:
