@@ -81,7 +81,7 @@ steps:
     POD_NAME: '{{ .params.podName }}'
     CONTAINER_NAME: '{{ .params.containerName }}'
     ALL_CONTAINERS: '{{ eq .params.containerName "" }}'
-    PREVIOUS: true
+    PREVIOUS: "true"
     SP_FORMATTER: "raw"
 # Sending the previous logs to slack
 - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
