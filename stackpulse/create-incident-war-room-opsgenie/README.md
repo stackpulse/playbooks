@@ -35,5 +35,6 @@ Not a Stackpulse user? Follow these steps:
 3. Configure a new [OpsGenie integration](https://docs.stackpulse.io/integrations/#opsgenie)
 4. Set up your Zoom API keys as [Custom Secrets](https://docs.stackpulse.io/integrations/#custom-integrations-secrets)
 5. Import [this playbook](https://app.stackpulse.io/playbooks) into your account
-4. This playbook has a default trigger attached to it. It will be triggered when a StackPulse incident is created.
+6. This playbook has a default trigger attached to it. It will be triggered when a StackPulse incident is created
+
 > :memo: Note: If your account is missing one of the required integrations, or has multiple instances of an integration, go to the `TRIGGER` tab to select the required ones.
