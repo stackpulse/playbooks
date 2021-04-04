@@ -28,4 +28,4 @@ Not a Stackpulse user? Follow these steps:
 2. Configure a  new [Slack integration](https://docs.stackpulse.io/getting_started/#step-3-configure-a-new-slack-integration)
 3. Import [this playbook](https://app.stackpulse.io/playbooks) into your account
 4. This playbook has a default trigger attached to it. It will be triggered when a status of an incident will be updated to 'Resolved' or 'Closed'.
-> :memo: Note: If your account is missing one of the required integrations, or has multiple instances of an integration, go to the `TRIGGER` tab to select the required integration.
+> :memo: Note: If your account is missing one of the required integrations, or has multiple instances of an integration, go to the `TRIGGER` tab to select the required ones.
