@@ -6,7 +6,7 @@
 ![uses-zoom](https://img.shields.io/static/v1?label=uses&message=Zoom&style=flat&logo=zoom&color=2D8CFF)
 ![uses-opsgenie](https://img.shields.io/static/v1?label=uses&message=OpsGenie&style=flat&logo=opsgenie&color=0052CC)
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room-opsgenie/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room-opsgenie)
 
 This playbook opens a new Slack channel to be used as a war room for a new incident.
 It additionally creates a Zoom call and pages the current on caller on OpsGenie at the time of the incident.
@@ -26,7 +26,7 @@ This playbook should be set up to be triggered by an incident creation event.
 
 ## How to get started
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room-opsgenie/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room-opsgenie)
 
 Not a Stackpulse user? Follow these steps:
 
@@ -35,4 +35,5 @@ Not a Stackpulse user? Follow these steps:
 3. Configure a new [OpsGenie integration](https://docs.stackpulse.io/integrations/#opsgenie)
 4. Set up your Zoom API keys as [Custom Secrets](https://docs.stackpulse.io/integrations/#custom-integrations-secrets)
 5. Import [this playbook](https://app.stackpulse.io/playbooks) into your account
-6. Connect it to be triggered by incident creation events
+4. This playbook has a default trigger attached to it. It will be triggered when a StackPulse incident is created.
+> :memo: Note: If your account is missing one of the required integrations, or has multiple instances of an integration, go to the `TRIGGER` tab to select the required ones.
