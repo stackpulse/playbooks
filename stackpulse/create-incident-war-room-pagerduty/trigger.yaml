@@ -3,7 +3,7 @@ kind: Trigger
 enabled: true
 playbook: create-incident-war-room
 metadata:
-  name: trigger-create-incident-war-room
+  name: trigger-create-incident-war-room-pagerduty
   description: Triggers a war room generation when an incident is created.
 scenarios:
 - name: Incident created
@@ -11,3 +11,4 @@ scenarios:
   integration: StackPulse Incident
   when: '{{ and ( ieq .Type "created" ) }}'
   parameters: # automatically generated from playbook defaults
+    
