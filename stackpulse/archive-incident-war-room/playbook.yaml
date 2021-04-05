@@ -15,7 +15,7 @@ steps:
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
     id: slack_ask_archive_channel
     env:
-      DEFAULT_RESPONSE: "Yes"
+      DEFAULT_RESPONSE: 'Yes'
       QUESTION: "Do you want to archive {{ .event.SlackWarRoomChannelName }} channel?"
       RECIPIENTS: '{{ .event.Commander }}'
       RESPONSES: "Yes,No"
