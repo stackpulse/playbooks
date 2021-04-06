@@ -4,10 +4,10 @@ enabled: true
 playbook: archive-incident-war-room
 metadata:
   name: Archive channel trigger.
-  description: Triggered When an incident status is changing to 'Closed' or 'Resolved'.
+  description: Triggered When an incident status is changing to 'closed' or 'resolved'.
 scenarios:
 - name: Incident status updated to 'Closed' or 'Resolved'
   enabled: true
   integration: StackPulse Incident
-  when: "{{ and ( ieq (get \"$.event.Type\") \"Updated\" ) ( regexMatch \"Closed|Resolved\" $.event.Status ) }}"
+  when: "{{ and ( ieq (get \"$.event.Type\") \"Updated\" ) ( ieq (get \"$.event.Status\") \"closed\" ) }}"
   parameters: # automatically generated from playbook defaults
