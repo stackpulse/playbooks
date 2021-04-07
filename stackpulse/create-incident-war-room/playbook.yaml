@@ -25,6 +25,7 @@ parameters:
   - name: warRoomChannelName
     type: var
     description: "The War Room Slack channel name to be attached to the incident."
+    default: "{{ $.event.Name }} {{ $.event.ID }}"
   - name: slackIntegrationName
     type: integration
     description: "Slack integration."
@@ -35,7 +36,7 @@ steps:
 - name: us-docker.pkg.dev/stackpulse/public/slack/channel/create
   id: slack_create_war_room_channel
   env:
-    CHANNEL_NAME: "{{ $.params.incidentID }} {{ $.params.incidentName }}"
+    CHANNEL_NAME: "{{ $.params.warRoomChannelName }}"
     PURPOSE: "{{ $.params.incidentDescription }}"
     TOPIC: "StackPulse War Room Channel for Incident {{ $.params.incidentName }} ({{ $.params.incidentID }})"
     USERS: "{{ $.params.invitees }}"
