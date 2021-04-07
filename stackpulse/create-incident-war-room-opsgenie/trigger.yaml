@@ -1,7 +1,7 @@
 apiVersion: stackpulse.io/v1
 kind: Trigger
 enabled: true
-playbook: create-incident-war-room-opsgenie
+playbook: ""
 metadata:
   name: trigger-create-incident-war-room-opsgenie
   description: Triggers a war room generation when an incident is created.

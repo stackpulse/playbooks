@@ -1,7 +1,7 @@
 apiVersion: stackpulse.io/v1
 kind: Trigger
 enabled: true
-playbook: archive-incident-war-room
+playbook: ""
 metadata:
   name: Archive channel trigger.
   description: Triggered When an incident status is changing to 'closed' or 'resolved'.
