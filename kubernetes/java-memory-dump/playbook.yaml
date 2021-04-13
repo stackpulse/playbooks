@@ -1,0 +1,94 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:  
+  name: java-memory-dump
+  description: Take heap memory dump of java application running in a Kubernetes pod, and ask the user interactivly whether to restart the pod after the dump.
+parameters:
+  - name: podName
+    type: var
+  - name: bucket
+    type: var
+    default: "gs://step-artifacts"
+  - name: spdRunner
+    type: spd
+    default: moshe-local
+  - name: slackIntegration
+    type: integration
+    options:
+      integration_type: slack
+    default: SlackSP
+  - name: gcpIntegration
+    type: integration
+    options:
+      integration_type: gcp
+    default: STEP_ARTIFACTS
+  - name: slackChannel
+    type: var
+    default: "#moshe-test-archive-5"
+
+steps:
+  - name: us-docker.pkg.dev/stackpulse/public/kubectl/get-pods
+    id: get_pods
+    runner: '{{ $.params.spdRunner }}'
+    env:
+      POD_NAMES: "{{ $.params.podName }}"
+  
+  - when: '{{ gt (len $.get_pods.items) 0 }}'
+    steps:
+      - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
+        id: send_pod_info
+        env:
+          MESSAGE_TEXT: "Dumping heap memory of the application running in the following pod: \n\n*Name*: {{ $.get_pods.items[0].name }}\n*Node*: {{ $.get_pods.items[0].node }}\n*Status*: {{ $.get_pods.items[0].status }}\n*Containers*: {{ $.get_pods.items[0].containersCount }}\n*Age*: {{ $.get_pods.items[0].age }}"
+          SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+          RECIPIENTS: "{{ $.params.slackChannel }}"
+        envFrom:
+          integrationRef: '{{ $.params.slackIntegration }}'
+
+      - name: us-docker.pkg.dev/stackpulse/public/kubectl/heapdump
+        id: jattach_heapdump
+        runner: '{{ $.params.spdRunner }}'
+        env:
+          POD_NAME: '{{ $.params.podName }}'
+          BUCKET: '{{ $.params.bucket }}'
+          RUNTIME: JVM
+        envFrom:
+          integrationRef: '{{ $.params.gcpIntegration }}'
+
+      - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
+        id: send_dump_url
+        env:
+          MESSAGE_TEXT: "Application dump of pod `{{ $.params.podName }}` was uploaded to:\n{{ $.jattach_heapdump.dump_file_uri }}"
+          SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+          RECIPIENTS: "{{ $.params.slackChannel }}"
+        envFrom:
+          integrationRef: '{{ $.params.slackIntegration }}'
+
+      - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
+        id: ask_delete_pod
+        env:
+          SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+          RECIPIENTS: "{{ $.params.slackChannel }}"
+          QUESTION: "Would you like to restart the pod?"
+          DEFAULT_RESPONSE: "No"
+          RESPONSES: "Yes,No"
+          SELECTOR_TYPE: "BUTTONS_SELECT"
+        envFrom:
+          integrationRef: '{{ $.params.slackIntegration }}'
+
+      - name: us-docker.pkg.dev/stackpulse/public/kubectl/delete
+        id: delete_pod
+        when: '{{ eq $.ask_delete_pod.selected_responses[0] "Yes" }}'
+        runner: '{{ $.params.spdRunner }}'
+        env:
+          RESOURCE_TYPE: "pod"
+          RESOURCES_NAMES: "{{ $.params.podName }}"
+
+      - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
+        id: delete_pod_status
+        when: '{{ eq $.ask_delete_pod.selected_responses[0] "Yes" }}'
+        env:
+          MESSAGE_TEXT: " {{ if $.delete_pod.success }} Pod {{ $.params.podName }} deleted successfully {{ else }} Failed to delete pod {{ $.params.podName }} {{ end }}"
+          SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+          RECIPIENTS: "{{ $.params.slackChannel }}"
+        envFrom:
+          integrationRef: '{{ $.params.slackIntegration }}'
