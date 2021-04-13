@@ -7,7 +7,6 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/java-memory-dump/playbook.yaml)
 
-
 This playbook perform memory dump of application running in a Kubernetes pod, upload it to cloud storage and send the summary along with the option to restart the pod directly from Slack.
 
 ## Your benefits
