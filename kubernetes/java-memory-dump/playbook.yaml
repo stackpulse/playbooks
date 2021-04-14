@@ -8,6 +8,7 @@ parameters:
     type: var
   - name: bucket
     type: var
+    default: "gs://application-heaps-dumps"
   - name: spdRunner
     type: spd
   - name: slackIntegration
