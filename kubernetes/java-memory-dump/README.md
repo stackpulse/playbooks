@@ -7,11 +7,11 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/java-memory-dump/playbook.yaml)
 
-This playbook perform memory dump of application running in a Kubernetes pod, upload it to cloud storage and send the summary along with the option to restart the pod directly from Slack.
+This playbook performs a memory dump of an application running in a Kubernetes pod, uploads it to a cloud storage and sends the summary along with the option to restart the pod directly from Slack.
 
 ## Your benefits
 
-- Get heap dump of your Java application without setup or orchestrate the tooling by yourself
+- Get a heap dump of your Java application without the need to setup or orchestrate the tooling by yourself
 - Auto save the dump file in a cloud storage bucket and track it on a Slack channel
 - Option to restart the pod directly from Slack without accessing the cluster
 

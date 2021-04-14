@@ -2,29 +2,24 @@ apiVersion: stackpulse.io/v1
 kind: Playbook
 metadata:  
   name: java-memory-dump
-  description: Take heap memory dump of java application running in a Kubernetes pod, and ask the user interactivly whether to restart the pod after the dump.
+  description: Take a heap memory dump of a java application running in a Kubernetes pod, and ask the user interactively whether to restart the pod after the dump.
 parameters:
   - name: podName
     type: var
   - name: bucket
     type: var
-    default: "gs://step-artifacts"
   - name: spdRunner
     type: spd
-    default: moshe-local
   - name: slackIntegration
     type: integration
     options:
       integration_type: slack
-    default: SlackSP
   - name: gcpIntegration
     type: integration
     options:
       integration_type: gcp
-    default: STEP_ARTIFACTS
   - name: slackChannel
     type: var
-    default: "#moshe-test-archive-5"
 
 steps:
   - name: us-docker.pkg.dev/stackpulse/public/kubectl/get-pods
@@ -38,7 +33,7 @@ steps:
       - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
         id: send_pod_info
         env:
-          MESSAGE_TEXT: "Dumping heap memory of the application running in the following pod: \n\n*Name*: {{ $.get_pods.items[0].name }}\n*Node*: {{ $.get_pods.items[0].node }}\n*Status*: {{ $.get_pods.items[0].status }}\n*Containers*: {{ $.get_pods.items[0].containersCount }}\n*Age*: {{ $.get_pods.items[0].age }}"
+          MESSAGE_TEXT: "Dumping the heap memory of the application running in the following pod: \n\n*Name*: {{ $.get_pods.items[0].name }}\n*Node*: {{ $.get_pods.items[0].node }}\n*Status*: {{ $.get_pods.items[0].status }}\n*Containers*: {{ $.get_pods.items[0].containersCount }}\n*Age*: {{ $.get_pods.items[0].age }}"
           SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
           RECIPIENTS: "{{ $.params.slackChannel }}"
         envFrom:
