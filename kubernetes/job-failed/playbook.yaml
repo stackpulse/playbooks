@@ -10,7 +10,7 @@ parameters:
   - name: namespace
     type: var
     description: Kubernetes jobs namespace.
-  - name: job_name
+  - name: jobName
     type: var
     Description: Name of the specific job that failed. usually in this structure - <cronjob
       name>-<number>.
@@ -29,7 +29,7 @@ steps:
     runner: "{{ $.params.runner }}"
     env:
       NAMESPACE: "{{ $.params.namespace }}"
-      NAME_CONTAINS: "{{ $.params.job_name }}"
+      NAME_CONTAINS: "{{ $.params.jobName }}"
       FIELD_SELECTOR: status.phase=Failed
   - foreach:
       in: filtered
@@ -58,7 +58,7 @@ steps:
       SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
       HEADER_MESSAGE: Hello developer,
       RECIPIENTS: "{{ $.params.recipient }}"
-      QUESTION: The job {{ $.params.job_name }} has failed. What whould you like to do?
+      QUESTION: The job {{ $.params.jobName }} has failed. What whould you like to do?
       RESPONSES: Rerun,Delete,Nothing
       SELECTOR_TYPE: BUTTONS_SELECT
       TIMEOUT: 5m
@@ -70,14 +70,14 @@ steps:
         id: kubectl_delete
         env:
           RESOURCE_TYPE: job
-          RESOURCES_NAMES: "{{ $.params.job_name }}"
+          RESOURCES_NAMES: "{{ $.params.jobName }}"
       - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
         id: slack_send_dynamic_message
         envFrom:
           integrationRef: "{{ $.params.slack_integration }}"
         env:
           RECIPIENTS: "{{ $.params.recipient }}"
-          MESSAGE_TEXT: Job {{ $.params.job_name }} was succesfully deleted!
+          MESSAGE_TEXT: Job {{ $.params.jobName }} was succesfully deleted!
           SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
   - when: '{{ eq $.ask_which_action.slack_response "Rerun" }}'
     steps:
@@ -87,7 +87,7 @@ steps:
         args:
           - get
           - jobs
-          - '{{ $.params.job_name }}'
+          - '{{ $.params.jobName }}'
           - -o
           - yaml
           - -n
@@ -97,7 +97,7 @@ steps:
         id: kubectl_delete
         env:
           RESOURCE_TYPE: job
-          RESOURCES_NAMES: "{{ $.params.job_name }}"
+          RESOURCES_NAMES: "{{ $.params.jobName }}"
       - name: us-docker.pkg.dev/stackpulse/public/utils/replace-string
         id: remove_controller_uid
         env:
@@ -116,5 +116,5 @@ steps:
           integrationRef: "{{ $.params.slack_integration }}"
         env:
           RECIPIENTS: "{{ $.params.recipient }}"
-          MESSAGE_TEXT: Succesfully initiated a rerun of the job {{ $.params.job_name }}!
+          MESSAGE_TEXT: Succesfully initiated a rerun of the job {{ $.params.jobName }}!
           SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
