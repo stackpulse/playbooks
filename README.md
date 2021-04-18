@@ -237,7 +237,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
       </a>
     </td>
     <td border=0 width="90%">
-      <a href="https://github.com/stackpulse/playbooks/tree/master/aws/asg-execute-playbook"><b>Auto Scaling Group Execute Command</b></a><br><br>
+      <a href="https://github.com/stackpulse/playbooks/tree/master/aws/asg-execute-command"><b>Auto Scaling Group Execute Command</b></a><br><br>
       This playbook executes a command on each instance of an AWS Auto Scaling Group and and then verifies its health.<br><br>
     <div style="padding-top:1px">
         <img src="https://img.shields.io/static/v1?label=service&message=AWS&style=flat&logo=AWS&color=FF9900" alt="ssh">
