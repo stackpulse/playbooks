@@ -27,7 +27,7 @@ This playbook extracts logs from a failed Kubernetes job and optionally allows t
 
 This playbook requires certain spd permissions. In order to enable them please follow these steps:
 
-1. Run the command ```kubectl edit ClusterRole stackpulse-step -o yaml```
+1. Run the command ```kubectl edit ClusterRole stackpulse-step -o yaml -n stackpulse```
 2. Add another api group called 'batch':
 ```
  - apiGroups:
