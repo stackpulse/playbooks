@@ -7,7 +7,7 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/job-failed/playbook.yaml)
 
-This playbook extracts logs from a failed Kubernetes job and optionally allows to delete it.
+This playbook extracts logs from a failed Kubernetes job and optionally allows to delete or rerun it.
 
 ## Your benefits
 
