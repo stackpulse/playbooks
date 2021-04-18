@@ -19,7 +19,9 @@ parameters:
     description: Slack integration.
     options:
       integration_type: slack
+
 steps:
+  # Get pods of failed job, in order to extract logs.
   - name: us-docker.pkg.dev/stackpulse/public/kubectl/get-pods
     id: get_pods
     runner: "{{ $.params.runner }}"
@@ -27,6 +29,8 @@ steps:
       NAMESPACE: "{{ $.params.namespace }}"
       NAME_CONTAINS: "{{ $.params.jobName }}"
       FIELD_SELECTOR: status.phase=Failed
+
+  # For each pod, get its logs and send them via Slack.
   - foreach:
       in: filtered
       key: key
@@ -39,6 +43,7 @@ steps:
             POD_NAME: "{{ .value.name }}"
             SP_FORMATTER: raw
             ALL_CONTAINERS: "true"
+
         - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
           envFrom:
             integrationRef: "{{ $.params.slack_integration }}"
@@ -46,6 +51,8 @@ steps:
             CONTENT: "{{ $.output }}"
             RECIPIENTS: "{{ $.metadata.userEmail }}"
             SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+
+  # Prompt the user to chose an action - rerun, delete or do nothing with the failed job.
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
     id: ask_which_action
     envFrom:
@@ -59,6 +66,8 @@ steps:
       SELECTOR_TYPE: BUTTONS_SELECT
       TIMEOUT: 5m
       DEFAULT_RESPONSE: 'Delete'
+
+  # If the user has chosen to delete, delete the failed job.
   - when: '{{ eq $.ask_which_action.slack_response "Delete" }}'
     steps:
       - name: us-docker.pkg.dev/stackpulse/public/kubectl/delete
@@ -67,6 +76,7 @@ steps:
         env:
           RESOURCE_TYPE: job
           RESOURCES_NAMES: "{{ $.params.jobName }}"
+
       - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
         id: slack_send_dynamic_message
         envFrom:
@@ -75,6 +85,8 @@ steps:
           RECIPIENTS: "{{ $.metadata.userEmail }}"
           MESSAGE_TEXT: Job {{ $.params.jobName }} was succesfully deleted!
           SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+
+  # If the user has chosen to rerun, initiate a rerun of the failed job by deleting it and re-applying its deployment.
   - when: '{{ eq $.ask_which_action.slack_response "Rerun" }}'
     steps:
       - name: us-docker.pkg.dev/stackpulse/public/kubectl/cmd
@@ -88,12 +100,14 @@ steps:
           - yaml
           - -n
           - '{{ $.params.namespace }}'
+
       - name: us-docker.pkg.dev/stackpulse/public/kubectl/delete
         runner: "{{ $.params.runner }}"
         id: kubectl_delete
         env:
           RESOURCE_TYPE: job
           RESOURCES_NAMES: "{{ $.params.jobName }}"
+
       - name: us-docker.pkg.dev/stackpulse/public/utils/replace-string
         id: remove_controller_uid
         env:
@@ -101,11 +115,13 @@ steps:
           SUB_STR_SRC: " +?controller-uid: .*\n"
           SUB_STR_DEST: ""
           REGEX: "True"
+
       - name: us-docker.pkg.dev/stackpulse/public/kubectl/apply-file
         id: kubectl_apply_job_deployment
         runner: "{{ $.params.runner }}"
         env:
           APPLY_CONTENT: "{{ $.remove_controller_uid.output }}"
+
       - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
         id: slack_send_dynamic_message
         envFrom:
