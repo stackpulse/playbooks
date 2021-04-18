@@ -229,6 +229,27 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
   </tr>
 </table>
 
+<table border=2 border-style=outset>
+  <tr>
+    <td border=0 width="110">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/aws/asg-execute-command">
+        <img src="images/aws.svg"/>
+      </a>
+    </td>
+    <td border=0 width="90%">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/linux/diagnostics"><b>Auto Scaling Group Execute Command</b></a><br><br>
+      This playbook executes a command on each instance of an AWS Auto Scaling Group and and then verifies its health.<br><br>
+    <div style="padding-top:1px">
+        <img src="https://img.shields.io/static/v1?label=service&message=AWS&style=flat&logo=AWS&color=FF9900" alt="ssh">
+        <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
+    </div>
+    <div style="margin-top:15px">
+        <a href="https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/aws/asg-execute-command/playbook.yaml" target="_blank" style="vertical-align:middle"><img src="images/open_in_stackpulse.svg" alt="import_in_stackpulse" width="130" id="btn-import-asg-execute-commandd"></a>
+    </div>
+   </td>
+  </tr>
+</table>
+
 <br>
 
 ## Incident Management and Orchestration

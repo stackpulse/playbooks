@@ -1,0 +1,28 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  description: "Kubernetes rollout restart"
+  name: kubernetes-rollout-restart
+parameters:
+  - name: namespace
+    type: var
+    description: The relevant namespace to operate
+  - name: entity
+    type: var
+    description: The relevant entity to operate on
+  - name: KubernetesIntegration
+    type: integration
+    description: Kubernetes integration name
+    options:
+      integration_type: k8s
+steps:
+  - name: us-docker.pkg.dev/stackpulse/public/kubectl/cmd
+    id: kubectl_cmd
+    args:
+      - rollout
+      - restart
+      - '{{ $.params.entity }}'
+      - --namespace
+      - '{{ $.params.namespace }}'
+    envFrom:
+      integrationRef: '{{ $.params.KubernetesIntegration }}'
