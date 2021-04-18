@@ -2,11 +2,11 @@ apiVersion: stackpulse.io/v1
 kind: Playbook
 metadata:
   name: job-failed
-  description: Handle failed kubernetes job by sending the logs of its pods via slack, and  delete or reruns it according to the user selection.
+description: Handle a failed kubernetes job by sending the logs of its pods via slack, and delete or rerun it according to the user's selection.
 parameters:
   - name: runner
     type: spd
-    description: Name of target cluster spd.
+    description: Name of the target cluster spd.
   - name: namespace
     type: var
     description: Kubernetes jobs namespace.
@@ -16,7 +16,7 @@ parameters:
       name>-<number>.
   - name: recipient
     type: var
-    description: Email of slack recipient, or a channel name prefixed with
+    description: A Slack user or channel. use an email for a user or a channel name prefixed with '@'.
     default: "{{ $.metadata.userEmail }}"
   - name: slack_integration
     type: integration
@@ -56,9 +56,9 @@ steps:
       integrationRef: "{{ $.params.slack_integration }}"
     env:
       SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
-      HEADER_MESSAGE: Hello developer,
+      HEADER_MESSAGE: The job {{ $.params.jobName }} has failed.
       RECIPIENTS: "{{ $.params.recipient }}"
-      QUESTION: The job {{ $.params.jobName }} has failed. What whould you like to do?
+      QUESTION: What would you like to do?
       RESPONSES: Rerun,Delete,Nothing
       SELECTOR_TYPE: BUTTONS_SELECT
       TIMEOUT: 5m
