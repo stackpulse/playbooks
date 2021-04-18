@@ -72,7 +72,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
   <tr>
     <td border=0 width="110">
       <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/java-memory-dump">
-      <img src="images/stackpulse.png"/>
+      <img src="https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png"/>
       </a>
     </td>
     <td border=0 width="90%">
