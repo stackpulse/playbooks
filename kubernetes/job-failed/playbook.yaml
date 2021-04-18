@@ -2,7 +2,7 @@ apiVersion: stackpulse.io/v1
 kind: Playbook
 metadata:
   name: job-failed
-description: Handle a failed kubernetes job by sending the logs of its pods via slack, and delete or rerun it according to the user's selection.
+  description: Handle a failed kubernetes job by sending the logs of its pods via slack, and delete or rerun it according to the user's selection.
 parameters:
   - name: runner
     type: spd
@@ -14,10 +14,6 @@ parameters:
     type: var
     Description: Name of the specific job that failed. usually in this structure - <cronjob
       name>-<number>.
-  - name: recipient
-    type: var
-    description: A Slack user or channel. use an email for a user or a channel name prefixed with '@'.
-    default: "{{ $.metadata.userEmail }}"
   - name: slack_integration
     type: integration
     description: Slack integration.
@@ -48,7 +44,7 @@ steps:
             integrationRef: "{{ $.params.slack_integration }}"
           env:
             CONTENT: "{{ $.output }}"
-            RECIPIENTS: "{{ $.params.recipient }}"
+            RECIPIENTS: "{{ $.metadata.userEmail }}"
             SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
     id: ask_which_action
@@ -57,7 +53,7 @@ steps:
     env:
       SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
       HEADER_MESSAGE: The job {{ $.params.jobName }} has failed.
-      RECIPIENTS: "{{ $.params.recipient }}"
+      RECIPIENTS: "{{ $.metadata.userEmail }}"
       QUESTION: What would you like to do?
       RESPONSES: Rerun,Delete,Nothing
       SELECTOR_TYPE: BUTTONS_SELECT
@@ -76,7 +72,7 @@ steps:
         envFrom:
           integrationRef: "{{ $.params.slack_integration }}"
         env:
-          RECIPIENTS: "{{ $.params.recipient }}"
+          RECIPIENTS: "{{ $.metadata.userEmail }}"
           MESSAGE_TEXT: Job {{ $.params.jobName }} was succesfully deleted!
           SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
   - when: '{{ eq $.ask_which_action.slack_response "Rerun" }}'
@@ -115,6 +111,6 @@ steps:
         envFrom:
           integrationRef: "{{ $.params.slack_integration }}"
         env:
-          RECIPIENTS: "{{ $.params.recipient }}"
+          RECIPIENTS: "{{ $.metadata.userEmail }}"
           MESSAGE_TEXT: Succesfully initiated a rerun of the job {{ $.params.jobName }}!
           SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
