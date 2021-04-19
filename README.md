@@ -53,7 +53,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
     </td>
     <td border=0 width="90%">
       <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/job-failed"><b>Kubernetes Job Failed</b></a><br><br>
-      This playbook extracts logs from a failed Kubernetes job, sending them as a snippet to Slack, and optionally allows to delete, asking via Slack.
+      This playbook extracts logs from a failed Kubernetes job, sending them as a snippet to Slack, and optionally allows to delete or rerun, asking via Slack.
      <br><br>
     <div style="padding-top:1px">
         <img src="https://img.shields.io/static/v1?label=env&message=Kubernetes&style=flat&logo=Kubernetes&color=326CE5" alt="env">

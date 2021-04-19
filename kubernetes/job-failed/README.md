@@ -7,7 +7,7 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/job-failed/playbook.yaml)
 
-This playbook extracts logs from a failed Kubernetes job and optionally allows to delete it.
+This playbook extracts logs from a failed Kubernetes job and optionally allows to delete or rerun it.
 
 ## Your benefits
 
@@ -17,11 +17,31 @@ This playbook extracts logs from a failed Kubernetes job and optionally allows t
 
 ## Your experience
 
-![slack_screenshot](../../images/job_logs.svg)
+![slack_screenshot](../../images/job_failed.png)
 
 ## How to get started
 
-[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/job-restarting/playbook.yaml)
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/job-failed/playbook.yaml)
+
+### Permissions
+
+This playbook requires certain spd permissions. In order to enable them please follow these steps:
+
+1. Run the command ```kubectl edit ClusterRole stackpulse-step -o yaml -n stackpulse```
+2. Add another api group called 'batch':
+```
+ - apiGroups:
+    - batch
+    resources:
+    - pods
+    - jobs
+    verbs:
+    - get
+    - delete
+    - update
+    - create
+```
+3. Save the new configuration.
 
 Not a Stackpulse user? Follow these steps:
 
