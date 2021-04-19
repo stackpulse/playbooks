@@ -6,4 +6,14 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/label-logs/playbook.yaml)
 
-This playbook fetch logs by label
+This playbook fetches logs by label
+
+## How to get started
+
+[![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/label-logs/playbook.yaml)
+
+Not a Stackpulse user? Follow these steps:
+
+1. Make sure your have a [StackPulse](https://stackpulse.com/get-started) account
+2. Import [this playbook](https://app.stackpulse.io/playbooks) into your account
+4. Connect it to monitoring alerts or execute manually

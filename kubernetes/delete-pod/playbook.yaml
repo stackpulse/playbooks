@@ -1,7 +1,7 @@
 apiVersion: stackpulse.io/v1
 kind: Playbook
 metadata:
-  description: Kubernetes rollout restart
+  description: Kubernetes playbook to operate deletion for given pod
   name: kubernetes-delete-pod
 parameters:
   - name: namespace

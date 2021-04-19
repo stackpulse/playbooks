@@ -1,7 +1,7 @@
 apiVersion: stackpulse.io/v1
 kind: Playbook
 metadata:
-  description: Kubernetes logs
+  description: Kubernetes playbook to fetch logs from given entity
   name: kubernetes-logs
 parameters:
   - name: namespace

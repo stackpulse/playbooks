@@ -1,7 +1,7 @@
 apiVersion: stackpulse.io/v1
 kind: Playbook
 metadata:
-  description: "Kubernetes rollout restart"
+  description: Kubernetes playbook to operate rollout restart for given entity
   name: kubernetes-rollout-restart
 parameters:
   - name: namespace

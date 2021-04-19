@@ -1,7 +1,7 @@
 apiVersion: stackpulse.io/v1
 kind: Playbook
 metadata:
-  description: Kubernetes label logs
+  description: Kubernetes playbook to fetch logs by label
   name: kubernetes-label-logs
 parameters:
   - name: namespace
