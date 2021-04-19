@@ -23,7 +23,7 @@ This playbook extracts logs from a failed Kubernetes job and optionally allows t
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/job-failed/playbook.yaml)
 
-### permissions
+### Permissions
 
 This playbook requires certain spd permissions. In order to enable them please follow these steps:
 
