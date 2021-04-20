@@ -6,7 +6,7 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/rollout-restart/playbook.yaml)
 
-This playbook performs rollout restart for given kubernetes entity
+This playbook performs rollout restart for a given Kubernetes deployment.
 
 ## How to get started
 
