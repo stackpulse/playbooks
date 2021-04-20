@@ -31,15 +31,15 @@ This playbook requires certain spd permissions. In order to enable them please f
 2. Add another api group called 'batch':
 ```
  - apiGroups:
-    - batch
-    resources:
-    - pods
-    - jobs
-    verbs:
-    - get
-    - delete
-    - update
-    - create
+   - batch
+   resources:
+   - pods
+   - jobs
+   verbs:
+   - get
+   - delete
+   - update
+   - create
 ```
 3. Save the new configuration.
 
