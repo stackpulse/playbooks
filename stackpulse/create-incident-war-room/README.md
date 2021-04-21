@@ -21,7 +21,7 @@ This playbook opens a new Slack channel to be used as a war room when an inciden
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/stackpulse/create-incident-war-room)
 
-Not a Stackpulse user? Follow these steps:
+Not a StackPulse user? Follow these steps:
 
 1. Make sure your have a [StackPulse](https://stackpulse.com/get-started) account
 2. Configure a new [Slack integration](https://docs.stackpulse.io/integrations/#custom-integrations-secrets)

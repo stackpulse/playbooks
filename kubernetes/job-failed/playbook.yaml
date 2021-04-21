@@ -51,6 +51,7 @@ steps:
             CONTENT: "{{ $.output }}"
             RECIPIENTS: "{{ $.metadata.userEmail }}"
             SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+            TITLE: "{{ .value.name }}-logs"
 
   # Prompt the user to chose an action - rerun, delete or do nothing with the failed job.
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive

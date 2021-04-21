@@ -28,13 +28,13 @@ This playbook executes a command on each instance of an AWS Auto Scaling Group a
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/aws/asg-execute-command/playbook.yaml)
 
-Not a Stackpulse user? Follow these steps:
+Not a StackPulse user? Follow these steps:
 
 1. Make sure your have a [StackPulse](https://stackpulse.com/get-started) account
 2. Configure a  new [Slack integration](https://docs.stackpulse.io/getting_started/#step-3-configure-a-new-slack-integration)
-3. Set up your AWS authentication process-  
-    a. Remote SPD with dedicated AWS role.  
-    b. Using AWS integrarion.  
+3. Set up your AWS authentication process-
+    a. Remote SPD with dedicated AWS role.
+    b. Using AWS integrarion.
     c. Using AWS user tokens.
 4. Import [this playbook](https://app.stackpulse.io/playbooks) into your account
 5. Connect it to monitoring alerts or execute manually

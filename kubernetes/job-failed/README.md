@@ -28,22 +28,25 @@ This playbook extracts logs from a failed Kubernetes job and optionally allows t
 This playbook requires certain spd permissions. In order to enable them please follow these steps:
 
 1. Run the command ```kubectl edit ClusterRole stackpulse-step -o yaml -n stackpulse```
+
 2. Add another api group called 'batch':
-```
+
+```yaml
  - apiGroups:
-    - batch
-    resources:
-    - pods
-    - jobs
-    verbs:
-    - get
-    - delete
-    - update
-    - create
+   - batch
+   resources:
+   - pods
+   - jobs
+   verbs:
+   - get
+   - delete
+   - update
+   - create
 ```
+
 3. Save the new configuration.
 
-Not a Stackpulse user? Follow these steps:
+Not a StackPulse user? Follow these steps:
 
 1. Make sure your have a [StackPulse](https://stackpulse.com/get-started) account
 2. Configure a  new [Slack integration](https://docs.stackpulse.io/getting_started/#step-3-configure-a-new-slack-integration)
