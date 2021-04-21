@@ -43,10 +43,10 @@ This playbook requires certain spd permissions. In order to enable them please f
    - update
    - create
 ```
-<!-- markdownlint-disable-next-line MD029 -->
+<!-- markdownlint-disable-next-line ol-prefix -->
 3. Save the new configuration.
 
-Not a Stackpulse user? Follow these steps:
+Not a StackPulse user? Follow these steps:
 
 1. Make sure your have a [StackPulse](https://stackpulse.com/get-started) account
 2. Configure a  new [Slack integration](https://docs.stackpulse.io/getting_started/#step-3-configure-a-new-slack-integration)
