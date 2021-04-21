@@ -43,7 +43,7 @@ This playbook requires certain spd permissions. In order to enable them please f
    - update
    - create
 ```
-<!-- markdownlint-disable-next-line ol-prefix -->
+
 3. Save the new configuration.
 
 Not a StackPulse user? Follow these steps:
