@@ -118,7 +118,7 @@ steps:
     envFrom:
       integrationRef: '{{ $.params.slackIntegrationName }}'
 
-  # Interactively ask the reporter whether to page the on caller on OpsGenie
+  # If the user responds yes then do the paging
   - name: us-docker.pkg.dev/stackpulse/public/opsgenie/incident/create
     id: opsgenie_create_incident
     when: '{{ ieq $.slack_response "Yes" }}'
