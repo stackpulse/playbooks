@@ -1,0 +1,141 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: service-scale
+  description: This playbook will edit the range of a service HPA (Horizontal Pod Autoscaler).
+parameters:
+  # Operation Subject
+  - name: targetServiceName
+    type: var
+    description: Name of the service to be scaled.
+  - name: targetEnvironment
+    type: var
+    description: name of the service's environment.
+    default: production
+  - name: targetClusterRunner
+    type: spd
+    description: SPD runner on destination cluster.
+  - name: targetMinReplicas
+    type: var
+    description: The minimum number of replicas to use.
+  - name: targetMaxReplicas
+    type: var
+    description: The maximum number of replicas to use.
+
+  # Github
+  - name: githubApiToken
+    type: integration
+    description: Github api token.
+    options:
+      integration_type: github_token
+  - name: ownerName
+    type: var
+    description: Owner name of the Github repository.
+  - name: repositoryName
+    type: var
+    description: The name of the Github repository.
+
+  # Slack
+  - name: slackIntegrationName
+    type: integration
+    description: Slack integration name.
+    options:
+      integration_type: slack
+  - name: slackAlertsChannel
+    type: var
+    description: Slack channel to send success message to.
+    default: '{{ $.metadata.userEmail }}'
+steps:
+
+  # Create Pull Request
+  - name: us-docker.pkg.dev/stackpulse/public/github/commit
+    id: create_scaled_deployment_pull_request
+    env:
+      FILEPATH: kubernetes/{{ $.params.targetEnvironment }}/default/{{ $.params.targetServiceName }}/hpa.yaml
+      ORGANIZATION: "{{ $.params.ownerName }}"
+      REPO: "{{ $.params.ownerName }}/{{ $.params.repositoryName }}"
+      SRC_BRANCH: main
+      NAME: service-scale-{{ $.params.targetServiceName }}-{{ $.params.targetEnvironment }}-{{ $.metadata.executionId }}
+      TITLE: "SP-Playbook: service-scale-{{ $.params.targetServiceName }}-{{ $.params.targetEnvironment }}"
+      BODY: "Playbook executer: {{ $.metadata.userEmail }}"
+      COMMANDS: "sed -e 's/minReplicas: [0-9]/minReplicas: {{ $.params.targetMinReplicas}}/'
+                     -e 's/minReplicas: [0-9][0-9]/minReplicas: {{ $.params.targetMinReplicas }}/'
+                     -e 's/maxReplicas: [0-9]/maxReplicas: {{ $.params.targetMaxReplicas }}/'
+                     -e 's/maxReplicas: [0-9][0-9]/maxReplicas: {{ $.params.targetMaxReplicas }}/'"
+    envFrom:
+      integrationRef: "{{ $.params.githubApiToken }}"
+
+  # Get deployment file from the GitOps repository
+  - name: us-docker.pkg.dev/stackpulse/public/github/get-file
+    id: get_full_deployment_file
+    env:
+      FILE_PATH: kubernetes/staging/default/{{ $.params.targetServiceName }}/hpa.yaml
+      BRANCH: SP-Playbook-service-scale-{{ $.params.targetServiceName }}-{{ $.params.targetEnvironment }}-{{ $.metadata.executionId }}
+      REPOSITORY: "{{ $.params.repositoryName }}"
+      OWNER: "{{ $.params.ownerName }}"
+    envFrom:
+      integrationRef: "{{ $.params.githubApiToken }}"
+
+   # Edit deployment file
+  - name: us-docker.pkg.dev/stackpulse/public/utils/replace-string
+    id: replace_apex_to_primary
+    env:
+      ORIGINAL_BASE64_STRING: "{{ b64enc $.get_full_deployment_file.file_content }}"
+      SUB_STR_SRC: "{{ $.params.targetServiceName }}"
+      SUB_STR_DEST: "{{ $.params.targetServiceName }}-primary"
+      REGEX: "False"
+  - name: us-docker.pkg.dev/stackpulse/public/utils/replace-string
+    id: edit_min_replicas
+    env:
+      ORIGINAL_BASE64_STRING: "{{ $.replace_apex_to_primary.output }}"
+      SUB_STR_SRC: "(?<=minReplicas: )[0-9]"
+      SUB_STR_DEST: "{{ $.params.targetMinReplicas }}"
+      REGEX: "True"
+  - name: us-docker.pkg.dev/stackpulse/public/utils/replace-string
+    id: edit_max_replicas
+    env:
+      ORIGINAL_BASE64_STRING: "{{ $.edit_min_replicas.output }}"
+      SUB_STR_SRC: "(?<=maxReplicas: )[0-9]"
+      SUB_STR_DEST: "{{ $.params.targetMaxReplicas }}"
+      REGEX: "True"
+
+  # Ask permission to apply changes
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
+    id: ask_permission
+    env:
+      SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+      HEADER_MESSAGE: "Do you want to edit the autoscaler of the service {{ $.params.targetServiceName }} in {{ $.params.targetEnvironment }}?"
+      RECIPIENTS: "{{ $.params.slackAlertsChannel }}"
+      QUESTION: "If approved, the new range will be {{ $.params.targetMinReplicas }}-{{ $.params.targetMaxReplicas }} replicas."
+      RESPONSES: 'Yes,No'
+      MESSAGE_TYPE: BUTTONS_SELECT
+      TIMEOUT: 10m
+      DEFAULT_RESPONSE: 'Yes'
+    envFrom:
+      integrationRef: "{{ $.params.slackIntegrationName }}"
+
+  # If the user approved
+  - when: '{{ eq $.ask_permission.slack_response "Yes" }}'
+    steps:
+
+      # Apply to primary pods for immediate affect
+      - name: us-docker.pkg.dev/stackpulse/public/kubectl/apply-file
+        runner: "{{ $.params.targetClusterRunner }}"
+        id: kubectl-apply-deployment
+        env:
+          APPLY_CONTENT: "{{ $.edit_max_replicas.output }}"
+
+      # Notify success
+      - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
+        id: notify
+        env:
+          RECIPIENTS: "{{ $.params.slackAlertsChannel }}"
+          SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+          MESSAGE_TEXT: |-
+            Service Scale Playbook Finished Successfully on the service {{ $.params.targetServiceName }} in {{ $.params.targetEnvironment }}!
+            New replica amount range is now {{ $.params.targetMinReplicas }}-{{ $.params.targetMaxReplicas }}.
+            a PR was created and the deployment was applied successfully.
+
+            Here is the PR link: {{ $.create_scaled_deployment_pull_request.html_url }}
+        envFrom:
+          integrationRef: "{{ $.params.slackIntegrationName }}"
