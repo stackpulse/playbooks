@@ -1,0 +1,120 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: deployment-rollback
+  description: Update K8s deployment with a new image based on Github tag
+parameters:
+  - name: recipient
+    type: var
+    description: Slack recipient user or channel name
+  - name: recent_tags_count
+    type: var
+    description: Last n version tags
+    default: "5"
+  - name: user
+    type: var
+    description: User performing the rollback (for Github message purposes)
+  - name: targetClusterRunner
+    type: spd
+    description: SPD runner on destination cluster.
+  # Slack
+  - name: slackIntegrationName
+    type: integration
+    description: Slack integration name.
+    options:
+      integration_type: slack
+  - name: ownerName
+    type: var
+    description: Owner organization of the Github repository.
+steps:
+  - name: us-docker.pkg.dev/stackpulse/public/github/get-repos
+    id: get_repositories
+    env:
+      OWNER: "{{ $.params.ownerName }}"
+      TOKEN: '{{ secret "GITHUB_API_TOKEN" }}'
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
+    id: slack_send_interactive_message
+    env:
+      SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+      RECIPIENTS: "{{ $.params.recipient }}"
+      QUESTION: Select the service you wish to rollback
+      DEFAULT_RESPONSE: ""
+      SELECTOR_TYPE: SINGLE_SELECT
+      HEADER_MESSAGE: Repository selector
+      RESPONSES: "{{ toJson $.get_repositories.Repositories.* }}"
+    envFrom:
+      integrationRef: "{{ $.params.slackIntegrationName }}"
+  - name: us-docker.pkg.dev/stackpulse/public/github/get-tags
+    id: get_tags
+    env:
+      OWNER: "{{ $.params.ownerName }}"
+      TOKEN: '{{ secret "GITHUB_API_TOKEN" }}'
+      REPOSITORY: "{{ $.slack_send_interactive_message.slack_response }}"
+      NUM_OF_LAST_TAGS: "{{ $.params.recent_tags_count }}"
+  - name: us-docker.pkg.dev/stackpulse/public/utils/tabulate
+    id: tabulate
+    env:
+      HEADERS: Message,Name
+      INPUT: "{{ toJson $.get_tags.Tags }}"
+      COLUMN_WIDTH: "80"
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: slack-send-snippet
+    env:
+      CONTENT: "{{ $.tabulate.tabulate_output }}"
+      RECIPIENTS:  "{{ $.params.recipient }}"
+      SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
+      FILE_TYPE: auto
+      TITLE: "{{ $.slack_send_interactive_message.slack_response }} version history"
+    envFrom:
+      integrationRef: "{{ $.params.slackIntegrationName }}"
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/interactive
+    id: slack_send_tags_payload
+    env:
+      SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+      RECIPIENTS: "{{ $.params.recipient }}"
+      QUESTION: Select the tag you wish to rollback to
+      DEFAULT_RESPONSE: ""
+      SELECTOR_TYPE: SINGLE_SELECT
+      HEADER_MESSAGE: Tag selector
+      RESPONSES: "{{ toJson $.get_tags.Tags.[:].Name }}"
+    envFrom:
+      integrationRef: "{{ $.params.slackIntegrationName }}"
+  - name: us-docker.pkg.dev/stackpulse/public/fluxcd/lock
+    runner: "{{ $.params.targetClusterRunner }}"
+    id: flux_lock
+    env:
+      NAME: "{{ $.slack_send_interactive_message.selected_responses[0] }}"
+      NAMESPACE: default
+      FLUX_URL: http://flux.flux:3030/api/flux
+      USER: "{{ $.params.user }}"
+      LOCK: "true"
+  - name: us-docker.pkg.dev/stackpulse/public/k8s/deploy
+    runner: "{{ $.params.targetClusterRunner }}"
+    id: deploy_k8s
+    env:
+      NAME: "{{ $.slack_send_interactive_message.selected_responses[0] }}"
+      NAMESPACE: default
+      ENV: "prd"
+      TAG: "{{ $.slack_send_tags_payload.selected_responses[0] }}"
+  - name: us-docker.pkg.dev/stackpulse/public/kubectl/get-pods
+    runner: "{{ $.params.targetClusterRunner }}"
+    id: kubectl_get_pods
+    env:
+      NAME_CONTAINS: "{{ $.slack_send_interactive_message.selected_responses[0] }}"
+      ORDER_BY: age
+  - name: us-docker.pkg.dev/stackpulse/public/parsers/tabulate
+    id: tabulate_pods
+    env:
+      INPUT: '{{ toJson $.kubectl_get_pods.filtered }}'
+      HEADERS: '{"age":"Age", "name":"Name", "status":"Status"}'
+      INCLUDE_FILTER: '["age", "name", "status"]'
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: slack_send_pods_snippet
+    env:
+      CONTENT: "{{ $.tabulate_pods.tabulate_output }}"
+      RECIPIENTS: "{{ $.params.recipient }}"
+      SP_REDIRECT_URL: "{{ $.metadata.executionUrl }}"
+      FILE_TYPE: auto
+      TITLE: "Rollback completed {{ $.slack_send_interactive_message.selected_responses[0] }} running pods:"
+    envFrom:
+      integrationRef: "{{ $.params.slackIntegrationName }}"
