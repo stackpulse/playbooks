@@ -19,24 +19,48 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
 <br>
 
 <table border=2 border-style=outset>
-
   <tr>
     <td border=0 width="110">
-      <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/pod-restarting">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/rollback">
       <img src="https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png"/>
       </a>
     </td>
     <td border=0 width="90%">
-      <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/pod-restarting"><b>Kubernetes Pod Restarting</b></a><br><br>
-     This playbook solves consistent Pod Restarting events in a Kubernetes cluster.
-     It gets the latest started pods in the namespace provided either by alert or by the user, then gets the current and previous (if exists) logs of the relevant container.
+      <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/rollback"><b>Kubernetes Rollback</b></a><br><br>
+      This playbook enables an operator to easily and safely scale a service deployment by changing Kubernetes Horizontal Pod Autoscaler (HPA) settings. Executing the playbook will get the new HPA range from the user and issue both the scale command and create a pull request to solidify the change in a GitOps repo.
      <br><br>
     <div style="padding-top:1px">
         <img src="https://img.shields.io/static/v1?label=env&message=Kubernetes&style=flat&logo=Kubernetes&color=326CE5" alt="env">
         <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
+        <img src="https://img.shields.io/static/v1?label=uses&message=GitHub&style=flat&logo=github&color=4078c0" alt="github">
     </div>
     <div style="margin-top:15px">
-        <a href="https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/pod-restarting/playbook.yaml" target="_blank" style="vertical-align:middle"><img src="images/open_in_stackpulse.svg" alt="import_in_stackpulse" width="130" id="btn-import-pod-restarting"></a>
+        <a href="https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/rollback/playbook.yaml" target="_blank" style="vertical-align:middle"><img src="images/open_in_stackpulse.svg" alt="import_in_stackpulse" width="130" id="btn-import-k8s-rollback"></a>
+    </div>
+    </td>
+  </tr>
+</table>
+
+<br>
+
+<table border=2 border-style=outset>
+  <tr>
+    <td border=0 width="110">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/service-scale">
+      <img src="https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png"/>
+      </a>
+    </td>
+    <td border=0 width="90%">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/service-scale"><b>Kubernetes Service Scale</b></a><br><br>
+      This playbook enables an operator to easily and properly rollback a Kubernetes deployment using a GitOps Flux CD pipeline. Executing the playbook will interactively retrieve the list of services to the user and then the commit history for the selected service. Once the correct target tag is chosen, the playbook continues to safely rollback the service and lock the CD pipeline.
+     <br><br>
+    <div style="padding-top:1px">
+        <img src="https://img.shields.io/static/v1?label=env&message=Kubernetes&style=flat&logo=Kubernetes&color=326CE5" alt="env">
+        <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
+        <img src="https://img.shields.io/static/v1?label=uses&message=GitHub&style=flat&logo=github&color=4078c0" alt="github">
+    </div>
+    <div style="margin-top:15px">
+        <a href="https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/service-scale/playbook.yaml" target="_blank" style="vertical-align:middle"><img src="images/open_in_stackpulse.svg" alt="import_in_stackpulse" width="130" id="btn-import-k8s-service-scale"></a>
     </div>
     </td>
   </tr>
@@ -87,6 +111,33 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
   </td>
   </tr>
 </table>
+<br>
+
+<table border=2 border-style=outset>
+
+  <tr>
+    <td border=0 width="110">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/pod-restarting">
+      <img src="https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png"/>
+      </a>
+    </td>
+    <td border=0 width="90%">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/pod-restarting"><b>Kubernetes Pod Restarting</b></a><br><br>
+     This playbook solves consistent Pod Restarting events in a Kubernetes cluster.
+     It gets the latest started pods in the namespace provided either by alert or by the user, then gets the current and previous (if exists) logs of the relevant container.
+     <br><br>
+    <div style="padding-top:1px">
+        <img src="https://img.shields.io/static/v1?label=env&message=Kubernetes&style=flat&logo=Kubernetes&color=326CE5" alt="env">
+        <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
+    </div>
+    <div style="margin-top:15px">
+        <a href="https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/pod-restarting/playbook.yaml" target="_blank" style="vertical-align:middle"><img src="images/open_in_stackpulse.svg" alt="import_in_stackpulse" width="130" id="btn-import-pod-restarting"></a>
+    </div>
+    </td>
+  </tr>
+</table>
+
+<br>
 
 <br>
 
