@@ -84,6 +84,7 @@ steps:
       SUB_STR_SRC: "{{ $.params.targetServiceName }}"
       SUB_STR_DEST: "{{ $.params.targetServiceName }}-primary"
       REGEX: "False"
+
   - name: us-docker.pkg.dev/stackpulse/public/utils/replace-string
     id: edit_min_replicas
     env:
@@ -91,6 +92,7 @@ steps:
       SUB_STR_SRC: "(?<=minReplicas: )[0-9]"
       SUB_STR_DEST: "{{ $.params.targetMinReplicas }}"
       REGEX: "True"
+
   - name: us-docker.pkg.dev/stackpulse/public/utils/replace-string
     id: edit_max_replicas
     env:
