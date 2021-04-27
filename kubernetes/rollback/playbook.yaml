@@ -20,7 +20,7 @@ parameters:
   # Slack
   - name: slackIntegrationName
     type: integration
-    description: Slack integration name.
+    description: Slack integration to use when sending rollback updates and messages.
     options:
       integration_type: slack
   - name: ownerName
