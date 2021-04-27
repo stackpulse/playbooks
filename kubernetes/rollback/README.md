@@ -26,7 +26,7 @@ This playbook enables an operator to easily and properly rollback a Kubernetes d
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/rollback/playbook.yaml)
 
-> :memo: **Note**: This playbook assumes the use of git tags/releases in repositories organized by service to manage Kubernetes deployments. It also makes assumptions about the FluxCD endpoint (see `FLUX_URL` in the playbook).
+> :warning: **Note**: This playbook assumes the use of git tags/releases in repositories organized by service to manage Kubernetes deployments. It also makes assumptions about the FluxCD endpoint (see `FLUX_URL` in the playbook).
 >
 > If you need assistance in integrating this playbook reach out to [StackPulse support][mailto:support@stackpulse.io].
 

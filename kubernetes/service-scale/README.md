@@ -23,7 +23,7 @@ This playbook enables an operator to easily and safely scale a service deploymen
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/service-scale/playbook.yaml)
 
-> :memo: **Note**: This playbook makes assumptions about the directory structure of your Kubernetes resources (see `FILE_PATH` in the playbook).
+> :warning: **Note**: This playbook makes assumptions about the directory structure of your Kubernetes resources (see `FILE_PATH` in the playbook).
 >
 > If you need assistance in integrating this playbook reach out to [StackPulse support][mailto:support@stackpulse.io].
 
