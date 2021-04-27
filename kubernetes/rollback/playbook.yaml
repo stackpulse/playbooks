@@ -9,7 +9,7 @@ parameters:
     description: Slack recipient user or channel name
   - name: recent_tags_count
     type: var
-    description: Last n version tags
+    description: Amount of GitHub tags to display as candidates for the rollback operation.
     default: "5"
   - name: user
     type: var
