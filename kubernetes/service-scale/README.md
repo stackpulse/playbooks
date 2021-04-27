@@ -27,7 +27,6 @@ This playbook enables an operator to easily and safely scale a service deploymen
 >
 > If you need assistance in integrating this playbook reach out to [StackPulse support][mailto:support@stackpulse.io].
 
-
 Not a StackPulse user? Follow these steps:
 
 1. Make sure your have a [StackPulse](https://stackpulse.com/get-started) account
