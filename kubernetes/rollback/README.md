@@ -8,7 +8,7 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/rollback/playbook.yaml)
 
-This playbook enables an operator to easily and properly rollback a Kubernetes deployment using a GitOps Flux CD pipeline. Executing the playbook will interactively retrieve the list of services to the user and then the commit history for the selected service. Once the correct target tag is chosen, the playbook continues to safely rollback the service and lock the CD pipeline.
+This playbook enables an operator to easily and properly rollback a Kubernetes deployment using a GitOps FluxCD. Executing the playbook will interactively retrieve the list of services to the user and then the commit history for the selected service. Once the correct target tag is chosen, the playbook continues to safely rollback the service and lock the CD pipeline.
 
 ## Your benefits
 
@@ -25,6 +25,10 @@ This playbook enables an operator to easily and properly rollback a Kubernetes d
 ## How to get started
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/rollback/playbook.yaml)
+
+> :memo: **Note**: This playbook assumes the use of git tags/releases in repositories organized by service to manage Kubernetes deployments. It also makes assumptions about the FluxCD endpoint (see `FLUX_URL` in the playbook).
+>
+> If you need assistance in integrating this playbook reach out to [StackPulse support][mailto:support@stackpulse.io].
 
 Not a StackPulse user? Follow these steps:
 

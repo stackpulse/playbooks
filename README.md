@@ -52,7 +52,7 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
     </td>
     <td border=0 width="90%">
       <a href="https://github.com/stackpulse/playbooks/tree/master/kubernetes/service-scale"><b>Kubernetes Service Scale</b></a><br><br>
-      This playbook enables an operator to easily and properly rollback a Kubernetes deployment using a GitOps Flux CD pipeline. Executing the playbook will interactively retrieve the list of services to the user and then the commit history for the selected service. Once the correct target tag is chosen, the playbook continues to safely rollback the service and lock the CD pipeline.
+      This playbook enables an operator to easily and properly rollback a Kubernetes deployment using a GitOps FluxCD. Executing the playbook will interactively retrieve the list of services to the user and then the commit history for the selected service. Once the correct target tag is chosen, the playbook continues to safely rollback the service and lock the CD pipeline.
      <br><br>
     <div style="padding-top:1px">
         <img src="https://img.shields.io/static/v1?label=env&message=Kubernetes&style=flat&logo=Kubernetes&color=326CE5" alt="env">
