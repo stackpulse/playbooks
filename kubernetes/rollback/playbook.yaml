@@ -6,26 +6,37 @@ metadata:
 parameters:
   - name: recipient
     type: var
-    description: Slack recipient user or channel name
-  - name: recent_tags_count
+    description: A Slack user (email) or channel name (with a '#') which will receive notification and actions from the playbook.
+    default: "{{ $.metadata.userEmail }}"
+
+  - name: recentTagsCount
     type: var
     description: Amount of GitHub tags to display as candidates for the rollback operation.
     default: "5"
+
   - name: user
     type: var
-    description: User performing the rollback (for Github message purposes)
+    description: The name of the user performing the rollback (for Github message purposes).
+
   - name: targetClusterRunner
     type: spd
     description: SPD runner on destination cluster.
-  # Slack
+
   - name: slackIntegrationName
     type: integration
     description: Slack integration to use when sending rollback updates and messages.
     options:
       integration_type: slack
+
   - name: ownerName
     type: var
     description: Owner organization of the Github repository.
+
+  - name: fluxEndpoint
+    type: var
+    description: The API endpoint of your FluxCD.
+    default: "http://flux.flux:3030/api/flux"
+
 steps:
   - name: us-docker.pkg.dev/stackpulse/public/github/get-repos
     id: get_repositories
@@ -50,7 +61,7 @@ steps:
       OWNER: "{{ $.params.ownerName }}"
       TOKEN: '{{ secret "GITHUB_API_TOKEN" }}'
       REPOSITORY: "{{ $.slack_send_interactive_message.slack_response }}"
-      NUM_OF_LAST_TAGS: "{{ $.params.recent_tags_count }}"
+      NUM_OF_LAST_TAGS: "{{ $.params.recentTagsCount }}"
   - name: us-docker.pkg.dev/stackpulse/public/utils/tabulate
     id: tabulate
     env:
@@ -85,7 +96,7 @@ steps:
     env:
       NAME: "{{ $.slack_send_interactive_message.selected_responses[0] }}"
       NAMESPACE: default
-      FLUX_URL: http://flux.flux:3030/api/flux
+      FLUX_URL: "{{ $.params.fluxEndpoint }}"
       USER: "{{ $.params.user }}"
       LOCK: "true"
   - name: us-docker.pkg.dev/stackpulse/public/k8s/deploy

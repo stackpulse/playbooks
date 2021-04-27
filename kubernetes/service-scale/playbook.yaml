@@ -4,43 +4,47 @@ metadata:
   name: service-scale
   description: This playbook will edit the range of a service HPA (Horizontal Pod Autoscaler).
 parameters:
-  # Operation Subject
   - name: targetServiceName
     type: var
     description: Name of the service to be scaled.
+
   - name: targetEnvironment
     type: var
     description: name of the service's environment.
     default: production
+
   - name: targetClusterRunner
     type: spd
     description: SPD runner on destination cluster.
+
   - name: targetMinReplicas
     type: var
     description: The minimum number of replicas to use.
+
   - name: targetMaxReplicas
     type: var
     description: The maximum number of replicas to use.
 
-  # Github
   - name: githubApiToken
     type: integration
-    description: Github api token.
+    description: A Github integration with repo list/read/write permissions for the target GitOps repository.
     options:
       integration_type: github_token
+
   - name: ownerName
     type: var
     description: Owner name of the Github repository.
+
   - name: repositoryName
     type: var
     description: The name of the Github repository.
 
-  # Slack
   - name: slackIntegrationName
     type: integration
     description: Slack integration name.
     options:
       integration_type: slack
+
   - name: slackAlertsChannel
     type: var
     description: Slack channel to send success message to.
@@ -69,7 +73,7 @@ steps:
   - name: us-docker.pkg.dev/stackpulse/public/github/get-file
     id: get_full_deployment_file
     env:
-      FILE_PATH: kubernetes/staging/default/{{ $.params.targetServiceName }}/hpa.yaml
+      FILE_PATH: kubernetes/{{ $.params.targetEnvironment }}/default/{{ $.params.targetServiceName }}/hpa.yaml
       BRANCH: SP-Playbook-service-scale-{{ $.params.targetServiceName }}-{{ $.params.targetEnvironment }}-{{ $.metadata.executionId }}
       REPOSITORY: "{{ $.params.repositoryName }}"
       OWNER: "{{ $.params.ownerName }}"
