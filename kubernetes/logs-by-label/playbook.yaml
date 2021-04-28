@@ -10,7 +10,6 @@ parameters:
   - name: label
     type: var
     description: The relevant label to filter by
-    required: false
   - name: KubernetesIntegration
     type: integration
     description: Kubernetes integration name

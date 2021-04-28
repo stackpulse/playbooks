@@ -13,7 +13,7 @@ parameters:
   - name: allContainers
     type: var
     default: "false"
-    description: Whether fetch logs for all containers (--all-containers flag).
+    description: Whether fetch logs for all containers (--all-containers flag). must be either true or false.
   - name: KubernetesIntegration
     type: integration
     description: Kubernetes integration name
