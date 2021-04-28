@@ -6,7 +6,7 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/delete-pod/playbook.yaml)
 
-This playbook allows you to delete forcefully a pod without any grace period. This enables you to delete even stuck or hanging pods.
+This playbook allows you to forcefully delete a pod without any grace period. This enables you to delete even stuck or hanging pods.
 
 ## How to get started
 
