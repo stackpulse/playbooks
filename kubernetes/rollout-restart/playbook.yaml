@@ -1,0 +1,45 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  description: Kubernetes playbook to operate rollout restart for given entity
+  name: kubernetes-rollout-restart
+parameters:
+  - name: namespace
+    type: var
+    description: The relevant namespace to operate in.
+    default: default
+  - name: entity
+    type: var
+    description: The relevant entity to operate on, ie. `deployment/nginx`.
+  - name: KubernetesIntegration
+    type: integration
+    description: Kubernetes integration name
+    options:
+      integration_type: k8s
+  - name: slackRecipient
+    type: var
+    description: The recipient for the playbook result notification
+  - name: slackIntegration
+    type: integration
+    description: The relevant slack integration
+    options:
+      integration_type: slack
+steps:
+  - name: us-docker.pkg.dev/stackpulse/public/kubectl/cmd
+    id: kubectl_cmd
+    args:
+      - rollout
+      - restart
+      - '{{ $.params.entity }}'
+      - --namespace
+      - '{{ $.params.namespace }}'
+    envFrom:
+      integrationRef: '{{ $.params.KubernetesIntegration }}'
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: slack_send_snippet
+    env:
+      CONTENT: "{{ $.kubectl_cmd.output }}"
+      RECIPIENTS: "{{ $.params.slackRecipient }}"
+      SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
+    envFrom:
+      integrationRef: "{{ $.params.slackIntegration }}"

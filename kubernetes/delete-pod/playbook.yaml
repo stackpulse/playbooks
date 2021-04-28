@@ -1,0 +1,57 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  description: Kubernetes rollout restart
+  name: kubernetes-delete-pod
+parameters:
+  - name: namespace
+    type: var
+    description: The namespace of the pod we wish to delete
+    default: default
+  - name: pod
+    type: var
+    description: The relevant pod to operate on
+  - name: force
+    type: var
+    description: Deletes pod without any grace period. Must be either `true` or `false`.
+  - name: gracePeriod
+    type: var
+    default: "0"
+    description: Pods terminate gracefully when their processe are complete. Kubernetes
+      imposes a default graceful termination period of 30 seconds. When deleting
+      a Pod you can override this grace period by setting the --grace-period
+      flag to the number of seconds to wait for the Pod to terminate before
+      forcibly terminating it.
+  - name: KubernetesIntegration
+    description: Kubernetes integration name
+    type: integration
+    options:
+      integration_type: k8s
+  - name: slackRecipient
+    type: var
+    description: The recipient for the playbook result notification
+    default: "{{ $.metadata.userEmail }}"
+  - name: slackIntegration
+    type: integration
+    description: The relevant slack integration
+    options:
+      integration_type: slack
+steps:
+  - name: us-docker.pkg.dev/stackpulse/public/kubectl/delete
+    id: kubectl_cmd
+    env:
+      RESOURCE_TYPE: pod
+      RESOURCES_NAMES: "{{ $.params.entity }}"
+      NAMESPACE: "{{ $.params.namespace }}"
+      GRACE_PERIOD: "{{ $.params.gracePeriod }}"
+      FORCE: "{{ $.params.force }}"
+    envFrom:
+      integrationRef: "{{ $.params.KubernetesIntegration }}"
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: slack_send_snippet
+    env:
+      CONTENT: "The request to delete the pod {{ $.params.entity}} ended with the result {{ $.kubectl_cmd }} "
+      RECIPIENTS: "{{ $.params.slackRecipient }}"
+      SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
+    envFrom:
+      integrationRef: "{{ $.params.slackIntegration }}"
