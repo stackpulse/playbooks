@@ -10,7 +10,7 @@ parameters:
     default: default
   - name: entity
     type: var
-    description: The relevant entity to operate on
+    description: The relevant entity to operate on, ie. `deployment/nginx`.
   - name: KubernetesIntegration
     type: integration
     description: Kubernetes integration name
