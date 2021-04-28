@@ -6,7 +6,7 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/rollout-restart/playbook.yaml)
 
-This playbook performs rollout restart for a given Kubernetes deployment.
+This playbook allows you to perform rollout restart for a given Kubernetes deployment.
 
 ## How to get started
 
@@ -16,4 +16,4 @@ Not a Stackpulse user? Follow these steps:
 
 1. Make sure your have a [StackPulse](https://stackpulse.com/get-started) account
 2. Import [this playbook](https://app.stackpulse.io/playbooks) into your account
-4. Connect it to monitoring alerts or execute manually
+3. Connect it to monitoring alerts or execute manually

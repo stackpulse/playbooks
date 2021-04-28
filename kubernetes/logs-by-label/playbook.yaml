@@ -19,6 +19,14 @@ parameters:
     description: Kubernetes integration name
     options:
       integration_type: k8s
+  - name: slackRecipient
+    type: var
+    description: The recipient for the playbook result notification
+  - name: slackIntegration
+    type: integration
+    description: The relevant slack integration
+    options:
+      integration_type: slack
 steps:
   - name: us-docker.pkg.dev/stackpulse/public/kubectl/logs
     id: kubectl_cmd
@@ -27,3 +35,11 @@ steps:
       NAMESPACE: "{{ $.params.namespace }}"
     envFrom:
       integrationRef: "{{ $.params.KubernetesIntegration }}"
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: slack_send_snippet
+    env:
+      CONTENT: "{{ $.kubectl_cmd.logs }}"
+      RECIPIENTS: "{{ $.params.slackRecipient }}"
+      SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
+    envFrom:
+      integrationRef: "{{ $.params.slackIntegration }}"
