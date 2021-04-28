@@ -8,7 +8,7 @@ parameters:
     type: var
     description: The namespace of the pod we wish to delete
     default: default
-  - name: entity
+  - name: pod
     type: var
     description: The relevant pod to operate on
   - name: force
