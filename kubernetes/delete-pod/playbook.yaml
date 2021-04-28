@@ -13,7 +13,7 @@ parameters:
     description: The relevant pod to operate on
   - name: force
     type: var
-    description: deletes pod without any grace period. must be either true or false.
+    description: Deletes pod without any grace period. Must be either `true` or `false`.
   - name: gracePeriod
     type: var
     default: "0"

@@ -6,7 +6,7 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/logs/playbook.yaml)
 
-This playbook allows you to fetch logs from kubernetes entity, with all the options that kubernetes expose to you.
+This playbook allows you to fetch logs from a Kubernetes entity, with all the options that Kubernetes expose to you.
 
 ## How to get started
 

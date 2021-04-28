@@ -9,7 +9,7 @@ parameters:
     description: The relevant namespace to operate in
   - name: label
     type: var
-    description: The relevant label to filter by
+    description: The relevant label to filter by (for example `app=mysql`).
   - name: KubernetesIntegration
     type: integration
     description: Kubernetes integration name
