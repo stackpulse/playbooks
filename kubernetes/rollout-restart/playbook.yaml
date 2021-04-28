@@ -6,7 +6,7 @@ metadata:
 parameters:
   - name: namespace
     type: var
-    description: The relevant namespace to operate
+    description: The relevant namespace to operate in, ie. `deployment/nginx`.
   - name: entity
     type: var
     description: The relevant entity to operate on

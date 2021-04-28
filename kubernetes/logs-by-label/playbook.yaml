@@ -6,13 +6,10 @@ metadata:
 parameters:
   - name: namespace
     type: var
-    description: The relevant namespace to operate
-    default: "default"
-    example: "default"
-    required: false
+    description: The relevant namespace to operate in
   - name: label
     type: var
-    description: The relevant entity to operate on
+    description: The relevant label to filter by
     required: false
   - name: KubernetesIntegration
     type: integration

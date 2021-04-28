@@ -10,10 +10,10 @@ parameters:
     default: default
   - name: entity
     type: var
-    description: The relevant entity to operate on
+    description: The relevant pod to operate on
   - name: force
     type: var
-    description: whether
+    description: deletes pod without any grace period.
   - name: gracePeriod
     type: var
     default: "0"
@@ -30,6 +30,7 @@ parameters:
   - name: slackRecipient
     type: var
     description: The recipient for the playbook result notification
+    default: "{{ $.metadata.userEmail }}"
   - name: slackIntegration
     type: integration
     description: The relevant slack integration
@@ -49,7 +50,7 @@ steps:
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
     id: slack_send_snippet
     env:
-      CONTENT: "The request to delete the entity {{ $.params.entity}} ended with the result {{ $.kubectl_cmd }} "
+      CONTENT: "The request to delete the pod {{ $.params.entity}} ended with the result {{ $.kubectl_cmd }} "
       RECIPIENTS: "{{ $.params.slackRecipient }}"
       SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
     envFrom:

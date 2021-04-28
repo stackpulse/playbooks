@@ -6,7 +6,8 @@
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/logs-by-label/playbook.yaml)
 
-This playbook allows you to fetch logs by given label
+This playbook allows you to fetch logs by a given label.
+For example, getting logs from all pods with the label `app=mysql`.
 
 ## How to get started
 
