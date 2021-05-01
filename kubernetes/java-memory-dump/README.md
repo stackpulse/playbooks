@@ -30,7 +30,6 @@ This playbook requires certain spd permissions. In order to enable them please f
 1. Run the command ```kubectl edit ClusterRole stackpulse-step -o yaml -n stackpulse```
 
 2. Add the following api groups:
-```
 
 ```yaml
 - apiGroups:
