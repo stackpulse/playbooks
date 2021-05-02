@@ -23,7 +23,43 @@ This playbook performs a memory dump of an application running in a Kubernetes p
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/kubernetes/java-memory-dump/playbook.yaml)
 
-Not a StackPulse user? Follow these steps:
+### Permissions
+
+This playbook requires certain spd permissions. In order to enable them please follow these steps:
+
+1. Run the command ```kubectl edit ClusterRole stackpulse-step -o yaml -n stackpulse```
+
+2. Add the following api groups:
+
+```yaml
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/log
+  - events
+  - nodes
+  - configmaps
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - delete
+```
+
+3. Save the new configuration.
+
+Not a Stackpulse user? Follow these steps:
 
 1. Make sure your have a [StackPulse](https://stackpulse.com/get-started) account
 2. Configure a  new [Slack integration](https://docs.stackpulse.io/getting_started/#step-3-configure-a-new-slack-integration)
