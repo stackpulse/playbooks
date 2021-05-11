@@ -134,14 +134,14 @@ steps:
       COMMAND: "grep '{' -B2 | grep / | cut -d' ' -f1"
 
   # Send logrotate paths to slack channel
-  - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
     id: send_logrotate_paths_to_slack
     env:
-      MESSAGE_TEXT: |
-        Logrotate paths:
-        ```{{ $.parse_logrotate_paths.output }}```
+      CONTENT: "{{ $.parse_logrotate_paths.output }}"
       SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
       RECIPIENTS: "{{  $.params.slackRecipients }}"
+      TITLE: "logrotate paths"
+      INITIAL_COMMENT: "Logrotate paths:"
     envFrom:
       integrationRef: '{{  $.params.slackIntegration }}'
 
