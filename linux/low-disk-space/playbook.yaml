@@ -140,8 +140,6 @@ steps:
       MESSAGE_TEXT: |
         Logrotate paths:
         ```{{ $.parse_logrotate_paths.output }}```
-        Full logrorate config:
-        ```{{ $.get_logrotate_config.output }}```
       SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
       RECIPIENTS: "{{  $.params.slackRecipients }}"
     envFrom:
