@@ -135,7 +135,7 @@ steps:
 
   # Send logrotate paths to slack channel
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
-    id: send_logrotate_config_to_slack
+    id: send_logrotate_paths_to_slack
     env:
       MESSAGE_TEXT: |
         Logrotate paths:
