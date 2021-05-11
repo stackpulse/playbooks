@@ -37,7 +37,7 @@ parameters:
     description: private key access the remote machine via ssh
 
 steps:
-  # send hello message
+  # Send hello message
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
     id: send_start_message_to_slack
     env:
@@ -50,7 +50,7 @@ steps:
     envFrom:
       integrationRef: "{{  $.params.slackIntegration }}"
 
-  # run df -h for filesystem disk usage analysis
+  # Run df -h for filesystem disk usage analysis
   - name: us-docker.pkg.dev/stackpulse/public/ssh/command
     id: filesystem_disk_usage
     runner: "{{ $.params.runnerName }}"
@@ -60,7 +60,7 @@ steps:
       HOSTNAME: "{{ $.params.hostname }}"
       PRIVATE_KEY: "{{ secret $.params.sshKey  }}"
 
-  # run df -hi for inode analysis
+  # Run df -hi for inode analysis
   - name: us-docker.pkg.dev/stackpulse/public/ssh/command
     id: inode_disk_usage
     runner: "{{ $.params.runnerName }}"
@@ -70,7 +70,7 @@ steps:
       HOSTNAME: "{{ $.params.hostname }}"
       PRIVATE_KEY: "{{ secret $.params.sshKey }}"
 
-  # send df output to slack channel
+  # Send df output to slack channel
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
     id: send_df_output_to_slack
     env:
@@ -116,7 +116,7 @@ steps:
           envFrom:
             integrationRef: '{{  $.params.slackIntegration }}'
 
-  # get logrotate configration
+  # Get logrotate configration
   - name: us-docker.pkg.dev/stackpulse/public/ssh/command
     id: get_logrotate_config
     runner: "{{ $.params.runnerName }}"
@@ -127,14 +127,14 @@ steps:
       HOSTNAME: "{{ $.params.hostname }}"
       PRIVATE_KEY: "{{ secret $.params.sshKey }}"
 
-  # parse logrotate config - extract paths
+  # Parse logrotate config - extract paths
   - name: us-docker.pkg.dev/stackpulse/public/parsers/data-transformer
     id: parse_logrotate_paths
     env:
       INPUT: '{{ $.get_logrotate_config.output }}'
       COMMAND: "grep '{' -B2 | grep / | cut -d' ' -f1"
 
-  # send logrotate paths to slack channel
+  # Send logrotate paths to slack channel
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
     id: send_logrotate_config_to_slack
     env:
@@ -148,7 +148,7 @@ steps:
     envFrom:
       integrationRef: '{{  $.params.slackIntegration }}'
 
-  # send logrotate config as snippet to slack
+  # Send logrotate config as snippet to slack
   - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
     id: send_logrotate_config_to_slack
     env:
