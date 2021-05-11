@@ -19,9 +19,6 @@ playbook fetch data regarding storage for given machine using ssh and sends data
 
 ![local-low-disk-space experience](../../images/low-disk-space.gif)
 
-
-![local-low-disk-space message](../../images/low-disk-space_output.png)
-
 ## How to get started
 
 [![Import to StackPulse](../../images/open_in_stackpulse.svg)](https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/linux/low-disk-space/playbook.yaml)
