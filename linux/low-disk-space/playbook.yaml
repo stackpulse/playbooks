@@ -1,0 +1,158 @@
+apiVersion: stackpulse.io/v1
+kind: Playbook
+metadata:
+  name: low-disk-space-diagnostics
+  description: This playbook fetch data regarding storage for given machine using ssh.
+parameters:
+  - name: hostname
+    type: var
+    description: hostname for the remote machine
+
+  - name: alertMessage
+    type: var
+    description: short message to describe playbook execution reason.
+
+  - name: slackIntegration
+    type: integration
+    options:
+      integration_type: slack
+
+  - name: slackRecipients
+    type: var
+    default: '{{ $.metadata.userEmail }}'
+    description: Comma seperated list of Slack channel names (with # prefix) or user emails to send the message to.
+
+  - name: username
+    type: var
+    description: username for remote access machine
+
+  - name: runnerName
+    type: var
+    description: "SPD runner name which has ssh access to the destination machine"
+    optional: true
+
+  - name: sshKey
+    type: secret
+    description: private key access the remote machine via ssh
+
+steps:
+  # Send hello message
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
+    id: send_start_message_to_slack
+    env:
+      MESSAGE_TEXT: |
+       Starting low disk space enrichment
+       Alert: ```{{ $.params.alertMessage }}```
+       Host: `"{{ $.params.hostname }}"`: 
+      SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
+      RECIPIENTS: "{{  $.params.slackRecipients }}"
+    envFrom:
+      integrationRef: "{{  $.params.slackIntegration }}"
+
+  # Run df -h for filesystem disk usage analysis
+  - name: us-docker.pkg.dev/stackpulse/public/ssh/command
+    id: filesystem_disk_usage
+    runner: "{{ $.params.runnerName }}"
+    env:
+      COMMAND: "df -h"
+      USERNAME: "{{ $.params.username }}"
+      HOSTNAME: "{{ $.params.hostname }}"
+      PRIVATE_KEY: "{{ secret $.params.sshKey  }}"
+
+  # Run df -hi for inode analysis
+  - name: us-docker.pkg.dev/stackpulse/public/ssh/command
+    id: inode_disk_usage
+    runner: "{{ $.params.runnerName }}"
+    env:
+      COMMAND: "df -hi"
+      USERNAME: "{{ $.params.username }}"
+      HOSTNAME: "{{ $.params.hostname }}"
+      PRIVATE_KEY: "{{ secret $.params.sshKey }}"
+
+  # Send df output to slack channel
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
+    id: send_df_output_to_slack
+    env:
+      MESSAGE_TEXT: |
+        Filesystem Disk Usage:
+        ```{{ $.filesystem_disk_usage.output }}```
+        Inode Disk Usage:
+        ```{{ $.inode_disk_usage.output }}```
+      SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
+      RECIPIENTS: "{{  $.params.slackRecipients }}"
+    envFrom:
+      integrationRef: '{{  $.params.slackIntegration }}'
+  
+  # For each path, run du to get a better understanding of disk space consuption. modify and adjust this list for your environment.
+  - foreach:
+      in:
+        - /
+        - /var
+        - /var/log
+        - /tmp
+        - "~"
+      key: k
+      value: path
+      steps:
+        # take 5 largest files (or directories).
+        - name: us-docker.pkg.dev/stackpulse/public/ssh/command
+          id: path_largest_files
+          runner: "{{ $.params.runnerName }}"
+          env:
+            COMMAND: "sudo du -ahx {{ $.path }} | sort -rh | head -5"
+            USERNAME: "{{ $.params.username }}"
+            HOSTNAME: "{{ $.params.hostname }}"
+            PRIVATE_KEY: "{{ secret $.params.sshKey }}"
+          # send du output to slack
+        - name: us-docker.pkg.dev/stackpulse/public/slack/message/dynamic
+          id: send_du_output_to_slack
+          env:
+            MESSAGE_TEXT: |
+              '{{ $.path }}' top largest files and subdirectories:
+              ```{{ $.path_largest_files.output }}```
+            SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
+            RECIPIENTS: "{{  $.params.slackRecipients }}"
+          envFrom:
+            integrationRef: '{{  $.params.slackIntegration }}'
+
+  # Get logrotate configration
+  - name: us-docker.pkg.dev/stackpulse/public/ssh/command
+    id: get_logrotate_config
+    runner: "{{ $.params.runnerName }}"
+    env:
+      COMMAND: "(cat /etc/logrotate.conf; for path in `cat /etc/logrotate.conf  | grep
+        include | cut -d' ' -f2`; do sudo cat $path/*; done)"
+      USERNAME: "{{ $.params.username }}"
+      HOSTNAME: "{{ $.params.hostname }}"
+      PRIVATE_KEY: "{{ secret $.params.sshKey }}"
+
+  # Parse logrotate config - extract paths
+  - name: us-docker.pkg.dev/stackpulse/public/parsers/data-transformer
+    id: parse_logrotate_paths
+    env:
+      INPUT: '{{ $.get_logrotate_config.output }}'
+      COMMAND: "grep '{' -B2 | grep / | cut -d' ' -f1"
+
+  # Send logrotate paths to slack channel
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: send_logrotate_paths_to_slack
+    env:
+      CONTENT: "{{ $.parse_logrotate_paths.output }}"
+      SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
+      RECIPIENTS: "{{  $.params.slackRecipients }}"
+      TITLE: "logrotate paths"
+      INITIAL_COMMENT: "Logrotate paths:"
+    envFrom:
+      integrationRef: '{{  $.params.slackIntegration }}'
+
+  # Send logrotate config as snippet to slack
+  - name: us-docker.pkg.dev/stackpulse/public/slack/message/snippet
+    id: send_logrotate_config_to_slack
+    env:
+      CONTENT: "{{ $.get_logrotate_config.output }}"
+      RECIPIENTS: "{{  $.params.slackRecipients }}"
+      TITLE: "logrotate config"
+      INITIAL_COMMENT: "Full logrorate config:"
+      SP_REDIRECT_URL: "{{ .metadata.executionUrl }}"
+    envFrom:
+      integrationRef: "{{  $.params.slackIntegration }}"

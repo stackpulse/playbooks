@@ -280,6 +280,29 @@ Playbooks in this section enrich, analyze and triage alerts in real-time. They h
   </tr>
 </table>
 
+<br>
+
+<table border=2 border-style=outset>
+  <tr>
+    <td border=0 width="110">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/linux/low-disk-space">
+        <img src="images/ssh.svg"/>
+      </a>
+    </td>
+    <td border=0 width="90%">
+      <a href="https://github.com/stackpulse/playbooks/tree/master/linux/low-disk-space"><b>Linux Low Disk Space Diagnostics</b></a><br><br>
+      This playbook fetch data regarding storage for given machine using ssh and sends data to slack.<br><br>
+    <div style="padding-top:1px">
+        <img src="https://img.shields.io/badge/uses-ssh-red" alt="ssh">
+        <img src="https://img.shields.io/static/v1?label=uses&message=Slack&style=flat&logo=slack&color=4A154B" alt="slack">
+    </div>
+    <div style="margin-top:15px">
+        <a href="https://app.stackpulse.io/playbook/create?tab=playbook#https://github.com/stackpulse/playbooks/blob/master/linux/low-disk-space/playbook.yaml" target="_blank" style="vertical-align:middle"><img src="images/open_in_stackpulse.svg" alt="import_in_stackpulse" width="130" id="btn-import-linux-low-disk-space-diagnostics"></a>
+    </div>
+   </td>
+  </tr>
+</table>
+
 <table border=2 border-style=outset>
   <tr>
     <td border=0 width="110">
