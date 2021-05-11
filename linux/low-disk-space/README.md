@@ -17,6 +17,9 @@ playbook fetch data regarding storage for given machine using ssh and sends data
 
 ## Your experience
 
+![local-low-disk-space experience](../../images/low-disk-space.gif)
+
+
 ![local-low-disk-space message](../../images/low-disk-space_output.png)
 
 ## How to get started
