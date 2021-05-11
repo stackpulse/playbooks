@@ -1,7 +1,7 @@
 apiVersion: stackpulse.io/v1
 kind: Playbook
 metadata:
-  name: low-disk-space-enrichment
+  name: low-disk-space-diagnostics
   description: This playbook fetch data regarding storage for given machine using ssh.
 parameters:
   - name: hostname
